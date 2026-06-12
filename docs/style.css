@@ -23,6 +23,7 @@ html, body {
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   overflow: hidden;
+  touch-action: none;
 }
 
 /* ── Screens ── */
@@ -57,8 +58,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
-  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s;
 }
 .level-card:active { transform: scale(0.97); }
 .level-card.solved { border-color: var(--accent); }
@@ -80,16 +80,18 @@ html, body {
 
 /* ── Game ── */
 #game {
-  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 16px);
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 12px);
 }
 
 .game-header {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: 10px 14px;
   gap: 12px;
+  flex-shrink: 0;
 }
-.btn-back {
+.btn-back, .btn-reset {
   background: var(--surface);
   border: 1.5px solid var(--border);
   border-radius: 10px;
@@ -97,24 +99,19 @@ html, body {
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   font-size: 1.1rem;
+  flex-shrink: 0;
 }
 .game-title { font-size: 1.1rem; font-weight: 600; flex: 1; }
-.btn-reset {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  width: 40px; height: 40px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  font-size: 1rem;
-}
 
+/* Board wrap fills remaining space */
 .board-wrap {
   flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 20px;
+  padding: 6px 16px;
+  overflow: hidden;
 }
 
 #board {
@@ -125,48 +122,52 @@ html, body {
   background: var(--surface);
   border: 2px solid var(--border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  /* Size set dynamically by JS */
 }
 
 #board canvas {
   display: block;
+  /* display size set by JS to match logical px */
 }
 
 /* ── Win Banner ── */
 .win-banner {
-  margin: 0 20px;
+  margin: 0 16px;
+  flex-shrink: 0;
   background: var(--win);
   border: 2px solid var(--accent);
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   text-align: center;
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .win-banner.visible { display: flex; }
-.win-banner h2 { font-size: 1.4rem; }
-.win-banner p  { color: var(--text-light); font-size: 0.9rem; }
+.win-banner h2 { font-size: 1.3rem; }
+.win-banner p  { color: var(--text-light); font-size: 0.85rem; }
 .btn-next {
   background: var(--accent);
   color: white;
   border: none;
   border-radius: 12px;
-  padding: 12px 32px;
-  font-size: 1rem;
+  padding: 11px 28px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
 }
 .btn-next:active { background: var(--accent-dark); }
 
-/* ── How-to Hint ── */
+/* ── Hint ── */
 .hint {
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-light);
-  padding: 0 20px 4px;
+  padding: 0 16px 4px;
+  flex-shrink: 0;
 }
 
 @keyframes popIn {
