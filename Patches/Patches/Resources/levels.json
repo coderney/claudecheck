@@ -1,0 +1,63 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "name": "Leicht 1",
+      "size": 4,
+      "clues": [
+        {"row": 0, "col": 0, "value": 2},
+        {"row": 0, "col": 2, "value": 2},
+        {"row": 1, "col": 1, "value": 4},
+        {"row": 2, "col": 3, "value": 4},
+        {"row": 3, "col": 0, "value": 4}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Leicht 2",
+      "size": 5,
+      "clues": [
+        {"row": 0, "col": 0, "value": 4},
+        {"row": 0, "col": 3, "value": 2},
+        {"row": 1, "col": 4, "value": 3},
+        {"row": 2, "col": 0, "value": 6},
+        {"row": 2, "col": 3, "value": 4},
+        {"row": 4, "col": 1, "value": 6}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Mittel 1",
+      "size": 6,
+      "clues": [
+        {"row": 0, "col": 0, "value": 3},
+        {"row": 0, "col": 3, "value": 3},
+        {"row": 1, "col": 1, "value": 4},
+        {"row": 1, "col": 5, "value": 2},
+        {"row": 2, "col": 3, "value": 6},
+        {"row": 3, "col": 0, "value": 4},
+        {"row": 4, "col": 2, "value": 2},
+        {"row": 4, "col": 5, "value": 6},
+        {"row": 5, "col": 0, "value": 6}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Mittel 2",
+      "size": 7,
+      "clues": [
+        {"row": 0, "col": 0, "value": 6},
+        {"row": 0, "col": 3, "value": 7},
+        {"row": 1, "col": 6, "value": 2},
+        {"row": 2, "col": 1, "value": 4},
+        {"row": 2, "col": 4, "value": 4},
+        {"row": 3, "col": 0, "value": 3},
+        {"row": 3, "col": 3, "value": 6},
+        {"row": 4, "col": 6, "value": 6},
+        {"row": 5, "col": 0, "value": 6},
+        {"row": 5, "col": 4, "value": 4},
+        {"row": 6, "col": 2, "value": 7}
+      ]
+    }
+  ]
+}
