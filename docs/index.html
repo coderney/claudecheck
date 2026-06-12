@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Patches" />
+  <meta name="theme-color" content="#7B9E6B" />
+  <title>Patches</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+  <!-- ── Menu Screen ─────────────────────────────────────── -->
+  <div id="menu" class="screen">
+    <div class="menu-header">
+      <h1>Patches</h1>
+      <p>Fülle das Gitter mit Rechtecken</p>
+    </div>
+    <div id="level-list" class="level-list"></div>
+
+    <div style="padding: 16px 24px; font-size: 0.78rem; color: #8B7D6B; line-height: 1.6;">
+      <strong>Wie spielt man?</strong><br>
+      Jede Zahl zeigt die Fläche eines Rechtecks. Ziehe über das Gitter, um Rechtecke zu zeichnen. Jedes Rechteck muss genau eine Zahl enthalten, und die Fläche muss stimmen.
+    </div>
+  </div>
+
+  <!-- ── Game Screen ─────────────────────────────────────── -->
+  <div id="game" class="screen">
+    <div class="game-header">
+      <div id="btn-back" class="btn-back">←</div>
+      <span id="game-title" class="game-title"></span>
+      <div id="btn-reset" class="btn-reset">↺</div>
+    </div>
+
+    <p class="hint">Ziehe über Zellen, um ein Rechteck zu zeichnen</p>
+
+    <div id="board-wrap" class="board-wrap">
+      <div id="board">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+
+    <div id="win-banner" class="win-banner">
+      <div style="font-size: 2rem;">🌸</div>
+      <h2>Gelöst!</h2>
+      <p id="win-msg"></p>
+      <button id="btn-next" class="btn-next">Nächstes Rätsel →</button>
+    </div>
+  </div>
+
+  <script src="./game.js"></script>
+</body>
+</html>
