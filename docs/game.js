@@ -4,93 +4,92 @@
 // Every level is constructed from a known partition, then clues are derived.
 // Format: clues: [{r, c, v}] where v = area of the rectangle covering (r,c).
 
+// hint: 'h' = horizontal, 'v' = vertical, 's' = square, null = no hint (harder)
+// The small indicator rectangle behind the clue number shows its orientation.
+
 const LEVELS = [
-  // ── Level 0: 4×4 (16 cells) ──────────────────────────────────────────
-  // Partition:
-  //   A rows0-1 cols0-1 (4)   B rows0-1 cols2-3 (4)
-  //   C row2    cols0-1 (2)   D rows2-3 cols2-3 (4)
-  //   E row3    cols0-1 (2)
+  // ── Level 0: 4×4 — all hints ─────────────────────────────────────────
+  // A rows0-1 cols0-1 (2×2=4,'s')   B rows0-1 cols2-3 (2×2=4,'s')
+  // C row2    cols0-1 (1×2=2,'h')   D rows2-3 cols2-3 (2×2=4,'s')
+  // E row3    cols0-1 (1×2=2,'h')
   {
     id: 0, name: 'Leicht 1', size: 4, difficulty: 'Leicht',
     clues: [
-      {r:0, c:0, v:4},
-      {r:1, c:3, v:4},
-      {r:2, c:1, v:2},
-      {r:2, c:2, v:4},
-      {r:3, c:0, v:2},
+      {r:0, c:0, v:4, hint:'s'},
+      {r:1, c:3, v:4, hint:'s'},
+      {r:2, c:1, v:2, hint:'h'},
+      {r:2, c:2, v:4, hint:'s'},
+      {r:3, c:0, v:2, hint:'h'},
     ]
   },
 
-  // ── Level 1: 5×5 (25 cells) ──────────────────────────────────────────
-  // Partition:
-  //   A row0    cols0-2 (3)   B rows0-1 cols3-4 (4)
-  //   C rows1-2 cols0-1 (4)   D rows1-2 col2   (2)
-  //   E row2    cols3-4 (2)   F row3    cols0-2 (3)
-  //   G row3    cols3-4 (2)   H row4    cols0-4 (5)
+  // ── Level 1: 5×5 — 6/8 hints ─────────────────────────────────────────
+  // A row0    cols0-2 (1×3=3,'h')   B rows0-1 cols3-4 (2×2=4,'s')
+  // C rows1-2 cols0-1 (2×2=4, null) D rows1-2 col2   (2×1=2,'v')
+  // E row2    cols3-4 (1×2=2,'h')   F row3    cols0-2 (1×3=3,'h')
+  // G row3    cols3-4 (1×2=2, null) H row4    cols0-4 (1×5=5,'h')
   {
     id: 1, name: 'Leicht 2', size: 5, difficulty: 'Leicht',
     clues: [
-      {r:0, c:1, v:3},
-      {r:0, c:4, v:4},
-      {r:1, c:0, v:4},
-      {r:2, c:2, v:2},
-      {r:2, c:3, v:2},
-      {r:3, c:1, v:3},
-      {r:3, c:4, v:2},
-      {r:4, c:2, v:5},
+      {r:0, c:1, v:3, hint:'h'},
+      {r:0, c:4, v:4, hint:'s'},
+      {r:1, c:0, v:4, hint:null},
+      {r:2, c:2, v:2, hint:'v'},
+      {r:2, c:3, v:2, hint:'h'},
+      {r:3, c:1, v:3, hint:'h'},
+      {r:3, c:4, v:2, hint:null},
+      {r:4, c:2, v:5, hint:'h'},
     ]
   },
 
-  // ── Level 2: 6×6 (36 cells) ──────────────────────────────────────────
-  // Partition:
-  //   A rows0-1 cols0-1 (4)   B row0    cols2-3 (2)
-  //   C rows0-1 cols4-5 (4)   D row1    cols2-3 (2)
-  //   E row2    cols0-2 (3)   F row2    cols3-5 (3)
-  //   G rows3-5 col0   (3)   H row3    cols1-3 (3)
-  //   I row3    cols4-5 (2)   J row4    cols1-2 (2)
-  //   K row4    cols3-5 (3)   L row5    cols1-5 (5)
+  // ── Level 2: 6×6 — 8/12 hints ────────────────────────────────────────
+  // A rows0-1 cols0-1 (2×2=4,'s')   B row0    cols2-3 (1×2=2,'h')
+  // C rows0-1 cols4-5 (2×2=4,'s')   D row1    cols2-3 (1×2=2, null)
+  // E row2    cols0-2 (1×3=3,'h')   F row2    cols3-5 (1×3=3,'h')
+  // G rows3-5 col0   (3×1=3,'v')   H row3    cols1-3 (1×3=3, null)
+  // I row3    cols4-5 (1×2=2, null) J row4    cols1-2 (1×2=2,'h')
+  // K row4    cols3-5 (1×3=3,'h')   L row5    cols1-5 (1×5=5,'h')
   {
     id: 2, name: 'Mittel 1', size: 6, difficulty: 'Mittel',
     clues: [
-      {r:0, c:1, v:4},
-      {r:0, c:2, v:2},
-      {r:1, c:4, v:4},
-      {r:1, c:3, v:2},
-      {r:2, c:1, v:3},
-      {r:2, c:4, v:3},
-      {r:4, c:0, v:3},
-      {r:3, c:2, v:3},
-      {r:3, c:5, v:2},
-      {r:4, c:2, v:2},
-      {r:4, c:4, v:3},
-      {r:5, c:3, v:5},
+      {r:0, c:1, v:4, hint:'s'},
+      {r:0, c:2, v:2, hint:'h'},
+      {r:1, c:4, v:4, hint:'s'},
+      {r:1, c:3, v:2, hint:null},
+      {r:2, c:1, v:3, hint:'h'},
+      {r:2, c:4, v:3, hint:'h'},
+      {r:4, c:0, v:3, hint:'v'},
+      {r:3, c:2, v:3, hint:null},
+      {r:3, c:5, v:2, hint:null},
+      {r:4, c:2, v:2, hint:'h'},
+      {r:4, c:4, v:3, hint:'h'},
+      {r:5, c:3, v:5, hint:'h'},
     ]
   },
 
-  // ── Level 3: 7×7 (49 cells) — bigger rectangles ──────────────────────
-  // Partition:
-  //   A rows0-1 cols0-2 (6)   B row0    cols3-6 (4)
-  //   C row1    cols3-6 (4)   D rows2-3 cols0-1 (4)
-  //   E row2    cols2-4 (3)   F rows2-3 cols5-6 (4)
-  //   G row3    cols2-4 (3)   H rows4-5 cols0-2 (6)
-  //   I row4    cols3-5 (3)   J rows4-6 col6   (3)
-  //   K row5    cols3-5 (3)   L row6    cols0-5 (6)
+  // ── Level 3: 7×7 — 7/12 hints ────────────────────────────────────────
+  // A rows0-1 cols0-2 (2×3=6,'h')   B row0    cols3-6 (1×4=4, null)
+  // C row1    cols3-6 (1×4=4, null) D rows2-3 cols0-1 (2×2=4,'s')
+  // E row2    cols2-4 (1×3=3,'h')   F rows2-3 cols5-6 (2×2=4,'s')
+  // G row3    cols2-4 (1×3=3, null) H rows4-5 cols0-2 (2×3=6,'h')
+  // I row4    cols3-5 (1×3=3, null) J rows4-6 col6   (3×1=3,'v')
+  // K row5    cols3-5 (1×3=3, null) L row6    cols0-5 (1×6=6,'h')
   // Total: 6+4+4+4+3+4+3+6+3+3+3+6 = 49 ✓
   {
     id: 3, name: 'Mittel 2', size: 7, difficulty: 'Mittel',
     clues: [
-      {r:0, c:1, v:6},
-      {r:0, c:5, v:4},
-      {r:1, c:4, v:4},
-      {r:2, c:0, v:4},
-      {r:2, c:3, v:3},
-      {r:2, c:5, v:4},
-      {r:3, c:3, v:3},
-      {r:4, c:1, v:6},
-      {r:4, c:4, v:3},
-      {r:5, c:6, v:3},
-      {r:5, c:4, v:3},
-      {r:6, c:3, v:6},
+      {r:0, c:1, v:6, hint:'h'},
+      {r:0, c:5, v:4, hint:null},
+      {r:1, c:4, v:4, hint:null},
+      {r:2, c:0, v:4, hint:'s'},
+      {r:2, c:3, v:3, hint:'h'},
+      {r:2, c:5, v:4, hint:'s'},
+      {r:3, c:3, v:3, hint:null},
+      {r:4, c:1, v:6, hint:'h'},
+      {r:4, c:4, v:3, hint:null},
+      {r:5, c:6, v:3, hint:'v'},
+      {r:5, c:4, v:3, hint:null},
+      {r:6, c:3, v:6, hint:'h'},
     ]
   },
 
@@ -105,24 +104,33 @@ const LEVELS = [
   //   M row6    cols4-7 (4)   N row7    cols0-3 (4)
   //   O row7    cols4-7 (4)
   // Total: 8+4+4+4+3+6+3+6+3+4+3+4+4+4+4 = 64 ✓
+  // ── Level 4: 8×8 — 5/15 hints (hard) ────────────────────────────────
+  // A rows0-1 cols0-3 (2×4=8,'h')   B rows0-1 cols4-5 (2×2=4, null)
+  // C rows0-1 cols6-7 (2×2=4, null) D rows2-3 cols0-1 (2×2=4, null)
+  // E row2    cols2-4 (1×3=3, null) F rows2-3 cols5-7 (2×3=6,'h')
+  // G row3    cols2-4 (1×3=3, null) H rows4-5 cols0-2 (2×3=6,'h')
+  // I row4    cols3-5 (1×3=3, null) J rows4-5 cols6-7 (2×2=4,'s')
+  // K row5    cols3-5 (1×3=3, null) L row6    cols0-3 (1×4=4, null)
+  // M row6    cols4-7 (1×4=4, null) N row7    cols0-3 (1×4=4, null)
+  // O row7    cols4-7 (1×4=4,'h')
   {
     id: 4, name: 'Schwer 1', size: 8, difficulty: 'Schwer',
     clues: [
-      {r:1, c:2, v:8},
-      {r:0, c:4, v:4},
-      {r:1, c:7, v:4},
-      {r:2, c:0, v:4},
-      {r:2, c:3, v:3},
-      {r:3, c:6, v:6},
-      {r:3, c:4, v:3},
-      {r:5, c:1, v:6},
-      {r:4, c:4, v:3},
-      {r:4, c:6, v:4},
-      {r:5, c:3, v:3},
-      {r:6, c:1, v:4},
-      {r:6, c:6, v:4},
-      {r:7, c:2, v:4},
-      {r:7, c:6, v:4},
+      {r:1, c:2, v:8, hint:'h'},
+      {r:0, c:4, v:4, hint:null},
+      {r:1, c:7, v:4, hint:null},
+      {r:2, c:0, v:4, hint:null},
+      {r:2, c:3, v:3, hint:null},
+      {r:3, c:6, v:6, hint:'h'},
+      {r:3, c:4, v:3, hint:null},
+      {r:5, c:1, v:6, hint:'h'},
+      {r:4, c:4, v:3, hint:null},
+      {r:4, c:6, v:4, hint:'s'},
+      {r:5, c:3, v:3, hint:null},
+      {r:6, c:1, v:4, hint:null},
+      {r:6, c:6, v:4, hint:null},
+      {r:7, c:2, v:4, hint:null},
+      {r:7, c:6, v:4, hint:'h'},
     ]
   },
 ];
@@ -272,7 +280,10 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(0, v); ctx.lineTo(BOARD_PX, v); ctx.stroke();
   }
 
-  // Clue numbers
+  // Clue indicators (orientation hint behind the number)
+  level.clues.forEach(clue => drawClueIndicator(clue));
+
+  // Clue numbers (on top of indicators)
   const fontSize = Math.max(11, Math.round(CELL * 0.40));
   ctx.font = `700 ${fontSize}px 'Montserrat', sans-serif`;
   ctx.textAlign = 'center';
@@ -285,6 +296,36 @@ function draw() {
       clue.r * CELL + CELL / 2
     );
   });
+}
+
+// Draw a small orientation-hint rectangle behind a clue number.
+// 'h' = wide, 'v' = tall, 's' = square, null = no indicator.
+function drawClueIndicator(clue) {
+  if (!clue.hint) return;
+
+  const cx = clue.c * CELL + CELL / 2;
+  const cy = clue.r * CELL + CELL / 2;
+  const max = CELL - 8;
+
+  let iw, ih;
+  if (clue.hint === 'h') {
+    iw = Math.min(max, CELL * 0.82);
+    ih = Math.min(max, CELL * 0.32);
+  } else if (clue.hint === 'v') {
+    iw = Math.min(max, CELL * 0.32);
+    ih = Math.min(max, CELL * 0.82);
+  } else {
+    iw = ih = Math.min(max, CELL * 0.54);
+  }
+
+  const radius = Math.min(4, iw * 0.18, ih * 0.18);
+  ctx.beginPath();
+  ctx.roundRect(cx - iw / 2, cy - ih / 2, iw, ih, radius);
+  ctx.fillStyle   = 'rgba(9,146,169,0.13)';  // primary-600 very subtle
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(9,146,169,0.55)';  // primary-600 medium
+  ctx.lineWidth   = 1.5;
+  ctx.stroke();
 }
 
 function paintRect(r0, c0, r1, c1, color, dashed) {
