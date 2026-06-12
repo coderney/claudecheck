@@ -127,18 +127,19 @@ const LEVELS = [
   },
 ];
 
-// ── Palette ───────────────────────────────────────────────────────────────
+// ── Palette (Design System colors) ───────────────────────────────────────
+// Primary teal, Secondary magenta, Accent yellow-green, semantic + neutrals
 const PALETTE = [
-  { fill: 'rgba(168,197,218,0.6)', stroke: '#5A8EAF' },
-  { fill: 'rgba(159,196,154,0.6)', stroke: '#4A8645' },
-  { fill: 'rgba(232,196,160,0.6)', stroke: '#B87030' },
-  { fill: 'rgba(196,168,212,0.6)', stroke: '#8050A0' },
-  { fill: 'rgba(240,196,160,0.6)', stroke: '#C06020' },
-  { fill: 'rgba(160,196,196,0.6)', stroke: '#308080' },
-  { fill: 'rgba(212,184,168,0.6)', stroke: '#805040' },
-  { fill: 'rgba(184,212,168,0.6)', stroke: '#408030' },
-  { fill: 'rgba(212,168,184,0.6)', stroke: '#803050' },
-  { fill: 'rgba(184,196,212,0.6)', stroke: '#405070' },
+  { fill: 'rgba(57,212,239,0.22)',  stroke: '#0992a9' },   // primary-400
+  { fill: 'rgba(222,7,190,0.18)',   stroke: '#a90a91' },   // secondary-500
+  { fill: 'rgba(211,238,58,0.30)',  stroke: '#6d7f0b' },   // accent-400
+  { fill: 'rgba(32,172,118,0.25)',  stroke: '#20ac76' },   // success
+  { fill: 'rgba(142,222,236,0.30)', stroke: '#0a6e7f' },   // primary-300
+  { fill: 'rgba(235,142,221,0.28)', stroke: '#7f0b6d' },   // secondary-300
+  { fill: 'rgba(221,235,142,0.35)', stroke: '#91a90a' },   // accent-300
+  { fill: 'rgba(15,144,230,0.22)',  stroke: '#0992a9' },   // info
+  { fill: 'rgba(190,222,7,0.28)',   stroke: '#4f5c0a' },   // accent-500
+  { fill: 'rgba(6,192,223,0.22)',   stroke: '#0a505c' },   // primary-500
 ];
 
 // ── App State ─────────────────────────────────────────────────────────────
@@ -243,7 +244,7 @@ function draw() {
   ctx.clearRect(0, 0, BOARD_PX, BOARD_PX);
 
   // Board background
-  ctx.fillStyle = '#EDE8DC';
+  ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, BOARD_PX, BOARD_PX);
 
   // Placed rectangles
@@ -257,13 +258,13 @@ function draw() {
     paintRect(
       dragStartCell.r, dragStartCell.c,
       dragCurrentCell.r, dragCurrentCell.c,
-      { fill: 'rgba(123,158,107,0.25)', stroke: '#7B9E6B' },
+      { fill: 'rgba(9,146,169,0.15)', stroke: '#0992a9' }, // primary-600 preview
       true
     );
   }
 
   // Grid lines
-  ctx.strokeStyle = '#C4B99A';
+  ctx.strokeStyle = '#d8dbdf'; // neutral-200
   ctx.lineWidth = 1;
   for (let i = 0; i <= n; i++) {
     const v = i * CELL;
@@ -273,10 +274,10 @@ function draw() {
 
   // Clue numbers
   const fontSize = Math.max(11, Math.round(CELL * 0.40));
-  ctx.font = `600 ${fontSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  ctx.font = `700 ${fontSize}px 'Montserrat', sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#3D3228';
+  ctx.fillStyle = '#0a363d'; // primary-900
   level.clues.forEach(clue => {
     ctx.fillText(
       String(clue.v),
