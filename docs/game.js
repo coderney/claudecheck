@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-1';
+const GAME_VERSION = '20260613-3';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -344,6 +344,12 @@ function draw() {
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, BOARD_PX, BOARD_PX);
 
+  // Clip everything to the board bounds so edge indicators/rects never bleed outside
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, 0, BOARD_PX, BOARD_PX);
+  ctx.clip();
+
   // Placed rectangles
   rectangles.forEach((rect, idx) => {
     paintRect(rect.r0, rect.c0, rect.r1, rect.c1,
@@ -369,10 +375,23 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(0, v); ctx.lineTo(BOARD_PX, v); ctx.stroke();
   }
 
-  // Clue indicators (behind numbers)
+  // White badge behind each clue cell — keeps indicator + number
+  // clearly readable above any colored selection rectangle
+  const badgeSize = CELL - 6;
+  const badgeRadius = Math.min(6, badgeSize * 0.15);
+  level.clues.forEach(clue => {
+    const cx = clue.c * CELL + CELL / 2;
+    const cy = clue.r * CELL + CELL / 2;
+    ctx.beginPath();
+    ctx.roundRect(cx - badgeSize / 2, cy - badgeSize / 2, badgeSize, badgeSize, badgeRadius);
+    ctx.fillStyle = 'rgba(255,255,255,0.90)';
+    ctx.fill();
+  });
+
+  // Clue indicators (on top of badge, below number)
   level.clues.forEach(clue => drawClueIndicator(clue));
 
-  // Clue numbers
+  // Clue numbers (always on top)
   const fontSize = Math.max(11, Math.round(CELL * 0.40));
   ctx.font = `700 ${fontSize}px 'Montserrat', sans-serif`;
   ctx.textAlign = 'center';
@@ -383,6 +402,8 @@ function draw() {
       clue.c * CELL + CELL / 2,
       clue.r * CELL + CELL / 2);
   });
+
+  ctx.restore();
 }
 
 // Orientation indicator behind a clue number.
@@ -397,8 +418,10 @@ function drawClueIndicator(clue) {
   const fontSize  = Math.max(11, Math.round(CELL * 0.40));
   const innerPad  = Math.max(5, Math.round(CELL * 0.15)); // padding around text
   const snug      = fontSize + innerPad * 2;              // rect snug around number
-  const elongated = Math.min(CELL - 4, snug * 2.4);       // stretched for direction
-  const maxDim    = CELL - 4;
+  // maxDim must not exceed the inner area of the selection rect (same selPad as paintRect)
+  const selPad    = Math.max(2, Math.round(CELL * 0.05));
+  const maxDim    = CELL - selPad * 2;
+  const elongated = Math.min(maxDim, snug * 2.4);         // stretched for direction
 
   if (!clue.hint) {
     // "+" cross: two bars, each snug-height thick and elongated-length long
