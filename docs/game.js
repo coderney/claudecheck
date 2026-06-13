@@ -366,48 +366,52 @@ function draw() {
 }
 
 // Orientation indicator behind a clue number.
-// hint null → two overlapping rectangles forming a "+" cross
-// hint 'h'/'v'/'s' → single shaped rectangle
+// Size is derived from the actual font size + inner padding, so the rectangle
+// always wraps the number with comfortable breathing room.
+// hint null → "+" cross (no directional info)
+// hint 'h'/'v'/'s' → teal rectangle with matching aspect ratio
 function drawClueIndicator(clue) {
   const cx = clue.c * CELL + CELL / 2;
   const cy = clue.r * CELL + CELL / 2;
-  const max = CELL - 8;
+
+  const fontSize  = Math.max(11, Math.round(CELL * 0.40));
+  const innerPad  = Math.max(5, Math.round(CELL * 0.15)); // padding around text
+  const snug      = fontSize + innerPad * 2;              // rect snug around number
+  const elongated = Math.min(CELL - 4, snug * 2.4);       // stretched for direction
+  const maxDim    = CELL - 4;
 
   if (!clue.hint) {
-    // Draw a "+" cross: horizontal bar + vertical bar
-    const arm       = Math.min(max, CELL * 0.84);
-    const thickness = Math.min(max, CELL * 0.34);
-    const r         = Math.min(3, thickness * 0.3);
+    // "+" cross: two bars, each snug-height thick and elongated-length long
+    const thick = Math.min(maxDim, snug);
+    const arm   = Math.min(maxDim, elongated);
+    const r     = Math.min(4, thick * 0.25);
 
-    ctx.fillStyle   = 'rgba(96,111,133,0.12)'; // neutral-500 subtle
+    ctx.fillStyle   = 'rgba(96,111,133,0.12)';
     ctx.strokeStyle = 'rgba(96,111,133,0.42)';
     ctx.lineWidth   = 1.5;
 
-    // Horizontal bar
     ctx.beginPath();
-    ctx.roundRect(cx - arm / 2, cy - thickness / 2, arm, thickness, r);
+    ctx.roundRect(cx - arm / 2, cy - thick / 2, arm, thick, r);
     ctx.fill(); ctx.stroke();
 
-    // Vertical bar
     ctx.beginPath();
-    ctx.roundRect(cx - thickness / 2, cy - arm / 2, thickness, arm, r);
+    ctx.roundRect(cx - thick / 2, cy - arm / 2, thick, arm, r);
     ctx.fill(); ctx.stroke();
     return;
   }
 
-  // Single orientation indicator
   let iw, ih;
   if (clue.hint === 'h') {
-    iw = Math.min(max, CELL * 0.87);
-    ih = Math.min(max, CELL * 0.36);
+    ih = Math.min(maxDim, snug);
+    iw = Math.min(maxDim, elongated);
   } else if (clue.hint === 'v') {
-    iw = Math.min(max, CELL * 0.36);
-    ih = Math.min(max, CELL * 0.87);
+    iw = Math.min(maxDim, snug);
+    ih = Math.min(maxDim, elongated);
   } else {
-    iw = ih = Math.min(max, CELL * 0.58);
+    iw = ih = Math.min(maxDim, Math.round(snug * 1.15));
   }
 
-  const rr = Math.min(4, iw * 0.18, ih * 0.18);
+  const rr = Math.min(5, iw * 0.2, ih * 0.2);
   ctx.beginPath();
   ctx.roundRect(cx - iw / 2, cy - ih / 2, iw, ih, rr);
   ctx.fillStyle   = 'rgba(9,146,169,0.13)';
@@ -598,6 +602,27 @@ document.getElementById('btn-retry').addEventListener('click', () => {
 });
 
 window.addEventListener('resize', () => { if (currentLevelIndex >= 0) resize(); });
+
+// ── Hard Reset ────────────────────────────────────────────────────────────
+document.getElementById('btn-hard-reset').addEventListener('click', async () => {
+  // Clear game progress
+  try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+
+  // Clear all SW caches
+  if ('caches' in window) {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+  }
+
+  // Unregister service workers so they re-install fresh
+  if ('serviceWorker' in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map(r => r.unregister()));
+  }
+
+  // Hard reload — bypasses browser cache
+  window.location.reload(true);
+});
 
 // ── Boot ──────────────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {

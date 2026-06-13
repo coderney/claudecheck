@@ -186,6 +186,25 @@ html, body {
   margin-bottom: var(--sp-0);
 }
 
+.btn-hard-reset {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--neutral-400);
+  background: none;
+  border: 1.5px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-1) var(--sp-3);
+  width: 100%;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-top: var(--sp-0);
+}
+.btn-hard-reset:active {
+  color: var(--error);
+  border-color: var(--error);
+}
+
 /* ════════════════════════════════════════
    GAME
 ════════════════════════════════════════ */
