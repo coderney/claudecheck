@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-9';
+const GAME_VERSION = '20260613-10';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -366,20 +366,25 @@ function draw() {
       clue.r * CELL + CELL / 2);
   });
 
-  // Placed rectangles (semi-transparent — clue stays faintly visible beneath)
-  rectangles.forEach((rect, idx) => {
+  // Placed rectangles — red if invalid (wrong area, orientation, or clue count)
+  const ERROR_COLOR = { fill: 'rgba(234,56,46,0.18)', stroke: '#ea382e' };
+  rectangles.forEach(rect => {
+    const ok = rectStatus(rect.r0, rect.c0, rect.r1, rect.c1) === 'valid';
     paintRect(rect.r0, rect.c0, rect.r1, rect.c1,
-              PALETTE[rect.colorIdx % PALETTE.length], false);
+      ok ? PALETTE[rect.colorIdx % PALETTE.length] : ERROR_COLOR, false);
   });
 
-  // Drag preview
+  // Drag preview — red if the current selection would be invalid
   if (dragActive && dragStartCell && dragCurrentCell) {
-    paintRect(
-      dragStartCell.r, dragStartCell.c,
-      dragCurrentCell.r, dragCurrentCell.c,
-      { fill: 'rgba(9,146,169,0.15)', stroke: '#0992a9' },
-      true
-    );
+    const pr0 = Math.min(dragStartCell.r, dragCurrentCell.r);
+    const pr1 = Math.max(dragStartCell.r, dragCurrentCell.r);
+    const pc0 = Math.min(dragStartCell.c, dragCurrentCell.c);
+    const pc1 = Math.max(dragStartCell.c, dragCurrentCell.c);
+    const ok = rectStatus(pr0, pc0, pr1, pc1) === 'valid';
+    paintRect(pr0, pc0, pr1, pc1,
+      ok ? { fill: 'rgba(9,146,169,0.15)', stroke: '#0992a9' }
+         : { fill: 'rgba(234,56,46,0.12)', stroke: '#ea382e' },
+      true);
   }
 
   // Grid lines (always on top so the grid structure stays visible)
@@ -547,6 +552,28 @@ canvas.addEventListener('mouseup', e => {
 });
 
 // ── Game Logic ────────────────────────────────────────────────────────────
+
+// Returns 'valid' if the rectangle has exactly one clue, correct area,
+// and matching orientation hint. Returns 'invalid' otherwise.
+function rectStatus(r0, c0, r1, c1) {
+  const level = LEVELS[currentLevelIndex];
+  const rows = r1 - r0 + 1;
+  const cols = c1 - c0 + 1;
+  const area = rows * cols;
+  const inside = level.clues.filter(
+    cl => cl.r >= r0 && cl.r <= r1 && cl.c >= c0 && cl.c <= c1
+  );
+  if (inside.length !== 1) return 'invalid';
+  const clue = inside[0];
+  if (area !== clue.v) return 'invalid';
+  if (area > 1 && clue.hint !== null) {
+    if (clue.hint === 'h' && cols <= rows) return 'invalid';
+    if (clue.hint === 'v' && rows <= cols) return 'invalid';
+    if (clue.hint === 's' && rows !== cols) return 'invalid';
+  }
+  return 'valid';
+}
+
 function placeRect() {
   if (!dragStartCell || !dragCurrentCell) return;
   const r0 = Math.min(dragStartCell.r, dragCurrentCell.r);
