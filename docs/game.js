@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-6';
+const GAME_VERSION = '20260613-7';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -155,12 +155,13 @@ async function checkForUpdate() {
   btn.textContent = '↺ Spiel zurücksetzen';
   btn.classList.remove('has-update');
   try {
-    // Fetch version.json bypassing all caches — even if game.js is stale,
-    // the server always tells us the current version.
     const res = await fetch('./version.json', { cache: 'no-store' });
     if (!res.ok) return;
     const { version: serverVersion } = await res.json();
-    if (serverVersion && serverVersion !== GAME_VERSION) {
+    latestServerVersion = serverVersion;
+    // Compare against the last acknowledged version (set when user clicks reset)
+    const ackedVersion = localStorage.getItem('patches_version_ack') || GAME_VERSION;
+    if (serverVersion && serverVersion !== ackedVersion) {
       btn.textContent = 'Aktualisierung vorhanden — Spiel zurücksetzen';
       btn.classList.add('has-update');
     }
@@ -179,6 +180,7 @@ function isUnlocked(idx) {
 }
 
 // ── App State ─────────────────────────────────────────────────────────────
+let latestServerVersion = null; // populated by checkForUpdate
 let currentLevelIndex = -1;
 let rectangles     = [];
 let solved         = [];
@@ -634,6 +636,12 @@ window.addEventListener('resize', () => { if (currentLevelIndex >= 0) resize(); 
 document.getElementById('btn-hard-reset').addEventListener('click', async () => {
   // Clear game progress
   try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+
+  // Mark this server version as acknowledged so the update banner
+  // doesn't reappear after the reload (until a newer version ships)
+  if (latestServerVersion) {
+    try { localStorage.setItem('patches_version_ack', latestServerVersion); } catch (_) {}
+  }
 
   // Clear all SW caches
   if ('caches' in window) {
