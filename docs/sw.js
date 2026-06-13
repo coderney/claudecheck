@@ -1,5 +1,5 @@
 // Cache version — bump on every deploy to force update
-const CACHE = 'patches-v3';
+const CACHE = 'patches-v4';
 const ASSETS = ['./', './index.html', './style.css', './game.js', './manifest.json', './version.json'];
 
 self.addEventListener('install', e => {
