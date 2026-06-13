@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-7';
+const GAME_VERSION = '20260613-8';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -403,6 +403,12 @@ function drawClueIndicator(clue) {
   const cx = clue.c * CELL + CELL / 2;
   const cy = clue.r * CELL + CELL / 2;
 
+  // Clip to this cell so the indicator never bleeds into neighbouring cells
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(clue.c * CELL, clue.r * CELL, CELL, CELL);
+  ctx.clip();
+
   const fontSize  = Math.max(11, Math.round(CELL * 0.40));
   const innerPad  = Math.max(5, Math.round(CELL * 0.15)); // padding around text
   const snug      = fontSize + innerPad * 2;              // rect snug around number
@@ -426,6 +432,7 @@ function drawClueIndicator(clue) {
     ctx.beginPath();
     ctx.roundRect(cx - thick / 2, cy - arm / 2, thick, arm, r);
     ctx.fill(); ctx.stroke();
+    ctx.restore();
     return;
   }
 
@@ -448,6 +455,7 @@ function drawClueIndicator(clue) {
   ctx.strokeStyle = 'rgba(9,146,169,0.55)';
   ctx.lineWidth   = 1.5;
   ctx.stroke();
+  ctx.restore();
 }
 
 function paintRect(r0, c0, r1, c1, color, dashed) {
