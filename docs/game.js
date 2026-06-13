@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-3';
+const GAME_VERSION = '20260613-4';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -150,20 +150,20 @@ function loadProgress() {
   } catch (_) { solved = []; }
 }
 
-function checkForUpdate() {
+async function checkForUpdate() {
   const btn = document.getElementById('btn-hard-reset');
+  btn.textContent = '↺ Spiel zurücksetzen';
+  btn.classList.remove('has-update');
   try {
-    const storedVersion = localStorage.getItem('patches_version');
-    const hasUpdate = storedVersion !== null && storedVersion !== GAME_VERSION;
-    if (hasUpdate) {
+    // Fetch version.json bypassing all caches — even if game.js is stale,
+    // the server always tells us the current version.
+    const res = await fetch('./version.json', { cache: 'no-store' });
+    if (!res.ok) return;
+    const { version: serverVersion } = await res.json();
+    if (serverVersion && serverVersion !== GAME_VERSION) {
       btn.textContent = 'Aktualisierung vorhanden — Spiel zurücksetzen';
       btn.classList.add('has-update');
-    } else {
-      btn.textContent = '↺ Spiel zurücksetzen';
-      btn.classList.remove('has-update');
     }
-    // Record current version so the indicator fires next time something changes
-    localStorage.setItem('patches_version', GAME_VERSION);
   } catch (_) {}
 }
 
