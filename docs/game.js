@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-11';
+const GAME_VERSION = '20260613-12';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -670,23 +670,25 @@ window.addEventListener('resize', () => { if (currentLevelIndex >= 0) resize(); 
 
 // ── Hard Reset ────────────────────────────────────────────────────────────
 document.getElementById('btn-hard-reset').addEventListener('click', async () => {
-  // Clear game progress
   try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
 
-  // Clear all SW caches
-  if ('caches' in window) {
-    const keys = await caches.keys();
-    await Promise.all(keys.map(k => caches.delete(k)));
-  }
+  try {
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } catch (_) {}
 
-  // Unregister service workers so they re-install fresh
-  if ('serviceWorker' in navigator) {
-    const regs = await navigator.serviceWorker.getRegistrations();
-    await Promise.all(regs.map(r => r.unregister()));
-  }
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+  } catch (_) {}
 
-  // Hard reload — bypasses browser cache
-  window.location.reload(true);
+  // Append timestamp so iOS fetches a fresh copy instead of using disk cache
+  const base = window.location.href.replace(/\?.*$/, '');
+  window.location.replace(base + '?r=' + Date.now());
 });
 
 // ── Boot ──────────────────────────────────────────────────────────────────
