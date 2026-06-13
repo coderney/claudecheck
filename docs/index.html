@@ -71,6 +71,15 @@
     </div>
   </div>
 
+  <!-- Fetch version.json as early as possible, before game.js loads.
+       index.html is always served fresh (network-first SW), so this
+       runs with up-to-date code even when game.js itself is cached. -->
+  <script>
+    window.__versionPromise = fetch('./version.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) { return d ? d.version : null; })
+      .catch(function() { return null; });
+  </script>
   <script src="./game.js"></script>
 </body>
 </html>
