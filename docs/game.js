@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-8';
+const GAME_VERSION = '20260613-9';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -403,10 +403,12 @@ function drawClueIndicator(clue) {
   const cx = clue.c * CELL + CELL / 2;
   const cy = clue.r * CELL + CELL / 2;
 
-  // Clip to this cell so the indicator never bleeds into neighbouring cells
+  // Clip to the same inner area as a selection rect so the indicator
+  // never extends beyond the selection rectangle's padding
+  const selPad = Math.max(2, Math.round(CELL * 0.05));
   ctx.save();
   ctx.beginPath();
-  ctx.rect(clue.c * CELL, clue.r * CELL, CELL, CELL);
+  ctx.rect(clue.c * CELL + selPad, clue.r * CELL + selPad, CELL - selPad * 2, CELL - selPad * 2);
   ctx.clip();
 
   const fontSize  = Math.max(11, Math.round(CELL * 0.40));
@@ -466,7 +468,7 @@ function paintRect(r0, c0, r1, c1, color, dashed) {
   const y = minR * CELL + pad;
   const w = (maxC - minC + 1) * CELL - pad * 2;
   const h = (maxR - minR + 1) * CELL - pad * 2;
-  const radius = Math.min(6, CELL * 0.12);
+  const radius = Math.min(14, CELL * 0.22);
 
   ctx.beginPath();
   ctx.roundRect(x, y, w, h, radius);
