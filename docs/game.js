@@ -10,7 +10,7 @@ const LEVELS = [
   // C row2    cols0-1 (1×2=2)  D rows2-3 cols2-3 (2×2=4)
   // E row3    cols0-1 (1×2=2)
   {
-    id: 0, name: 'Leicht 1', size: 4, difficulty: 'Leicht', timeLimit: 120,
+    id: 0, name: 'Leicht 1', size: 4, difficulty: 'Leicht', timeLimit: 30,
     clues: [
       {r:0, c:0, v:4, hint:'s'},
       {r:1, c:3, v:4, hint:'s'},
@@ -26,7 +26,7 @@ const LEVELS = [
   // E row2    cols3-4 (1×2=2,'h')  F row3    cols0-2 (1×3=3,'h')
   // G row3    cols3-4 (1×2=2,null) H row4    cols0-4 (1×5=5,'h')
   {
-    id: 1, name: 'Leicht 2', size: 5, difficulty: 'Leicht', timeLimit: 180,
+    id: 1, name: 'Leicht 2', size: 5, difficulty: 'Leicht', timeLimit: 75,
     clues: [
       {r:0, c:1, v:3, hint:'h'},
       {r:0, c:4, v:4, hint:'s'},
@@ -47,7 +47,7 @@ const LEVELS = [
   // I row3    cols4-5 (1×2=2,null) J row4    cols1-2 (1×2=2,'h')
   // K row4    cols3-5 (1×3=3,'h')  L row5    cols1-5 (1×5=5,'h')
   {
-    id: 2, name: 'Mittel 1', size: 6, difficulty: 'Mittel', timeLimit: 300,
+    id: 2, name: 'Mittel 1', size: 6, difficulty: 'Mittel', timeLimit: 120,
     clues: [
       {r:0, c:1, v:4, hint:'s'},
       {r:0, c:2, v:2, hint:'h'},
@@ -72,7 +72,7 @@ const LEVELS = [
   // I row4    cols3-5 (1×3=3,null) J rows4-6 col6   (3×1=3,'v')
   // K row5    cols3-5 (1×3=3,null) L row6    cols0-5 (1×6=6,'h')
   {
-    id: 3, name: 'Mittel 2', size: 7, difficulty: 'Mittel', timeLimit: 420,
+    id: 3, name: 'Mittel 2', size: 7, difficulty: 'Mittel', timeLimit: 210,
     clues: [
       {r:0, c:1, v:6, hint:'h'},
       {r:0, c:5, v:4, hint:null},
@@ -99,7 +99,7 @@ const LEVELS = [
   // M row6    cols4-7 (1×4=4,null) N row7    cols0-3 (1×4=4,null)
   // O row7    cols4-7 (1×4=4,'h')
   {
-    id: 4, name: 'Schwer 1', size: 8, difficulty: 'Schwer', timeLimit: 600,
+    id: 4, name: 'Schwer 1', size: 8, difficulty: 'Schwer', timeLimit: 360,
     clues: [
       {r:1, c:2, v:8, hint:'h'},
       {r:0, c:4, v:4, hint:null},
@@ -375,8 +375,8 @@ function drawClueIndicator(clue) {
 
   if (!clue.hint) {
     // Draw a "+" cross: horizontal bar + vertical bar
-    const arm       = Math.min(max, CELL * 0.78);
-    const thickness = Math.min(max, CELL * 0.30);
+    const arm       = Math.min(max, CELL * 0.84);
+    const thickness = Math.min(max, CELL * 0.34);
     const r         = Math.min(3, thickness * 0.3);
 
     ctx.fillStyle   = 'rgba(96,111,133,0.12)'; // neutral-500 subtle
@@ -398,13 +398,13 @@ function drawClueIndicator(clue) {
   // Single orientation indicator
   let iw, ih;
   if (clue.hint === 'h') {
-    iw = Math.min(max, CELL * 0.82);
-    ih = Math.min(max, CELL * 0.32);
+    iw = Math.min(max, CELL * 0.87);
+    ih = Math.min(max, CELL * 0.36);
   } else if (clue.hint === 'v') {
-    iw = Math.min(max, CELL * 0.32);
-    ih = Math.min(max, CELL * 0.82);
+    iw = Math.min(max, CELL * 0.36);
+    ih = Math.min(max, CELL * 0.87);
   } else {
-    iw = ih = Math.min(max, CELL * 0.54);
+    iw = ih = Math.min(max, CELL * 0.58);
   }
 
   const rr = Math.min(4, iw * 0.18, ih * 0.18);
