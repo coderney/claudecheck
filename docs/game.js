@@ -1,5 +1,8 @@
 'use strict';
 
+// Bump this string on every deployment — drives the update indicator on the menu.
+const GAME_VERSION = '20260613-1';
+
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
 // timeLimit: seconds allowed for this level
@@ -145,6 +148,23 @@ function loadProgress() {
       solved = Array.isArray(data.solved) ? data.solved : [];
     }
   } catch (_) { solved = []; }
+}
+
+function checkForUpdate() {
+  const btn = document.getElementById('btn-hard-reset');
+  try {
+    const storedVersion = localStorage.getItem('patches_version');
+    const hasUpdate = storedVersion !== null && storedVersion !== GAME_VERSION;
+    if (hasUpdate) {
+      btn.textContent = 'Aktualisierung vorhanden — Spiel zurücksetzen';
+      btn.classList.add('has-update');
+    } else {
+      btn.textContent = '↺ Spiel zurücksetzen';
+      btn.classList.remove('has-update');
+    }
+    // Record current version so the indicator fires next time something changes
+    localStorage.setItem('patches_version', GAME_VERSION);
+  } catch (_) {}
 }
 
 function saveProgress() {
@@ -630,4 +650,5 @@ if ('serviceWorker' in navigator) {
 }
 
 loadProgress();
+checkForUpdate();
 showMenu();

@@ -197,12 +197,23 @@ html, body {
   padding: var(--sp-1) var(--sp-3);
   width: 100%;
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
   margin-top: var(--sp-0);
 }
 .btn-hard-reset:active {
   color: var(--error);
   border-color: var(--error);
+}
+.btn-hard-reset.has-update {
+  color: var(--primary-700);
+  border-color: var(--primary-400);
+  background: var(--primary-50);
+  font-weight: 600;
+}
+.btn-hard-reset.has-update:active {
+  color: var(--error);
+  border-color: var(--error);
+  background: none;
 }
 
 /* ════════════════════════════════════════
