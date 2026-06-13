@@ -1,6 +1,6 @@
 // Cache version — bump on every deploy to force update
 const CACHE = 'patches-v3';
-const ASSETS = ['./', './index.html', './style.css', './game.js', './manifest.json'];
+const ASSETS = ['./', './index.html', './style.css', './game.js', './manifest.json', './version.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -23,7 +23,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = e.request.url;
   // Network-first for HTML, JS, CSS — always get the latest version
-  if (e.request.mode === 'navigate' || /\.(js|css|html)(\?|$)/.test(url)) {
+  if (e.request.mode === 'navigate' || /\.(js|css|html)(\?|$)/.test(url) || url.endsWith('version.json')) {
     e.respondWith(
       fetch(e.request)
         .then(response => {
