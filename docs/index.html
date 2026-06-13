@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Patches" />
@@ -38,6 +40,7 @@
     <div class="game-header">
       <div id="btn-back" class="btn-back">←</div>
       <span id="game-title" class="game-title"></span>
+      <div id="timer" class="timer">0:00</div>
       <div id="btn-reset" class="btn-reset">↺</div>
     </div>
 
@@ -49,11 +52,20 @@
       </div>
     </div>
 
+    <!-- Win Banner -->
     <div id="win-banner" class="win-banner">
       <div class="win-icon">🌿</div>
       <h2>Gelöst!</h2>
       <p id="win-msg"></p>
       <button id="btn-next" class="btn-next">Nächstes Rätsel →</button>
+    </div>
+
+    <!-- Timeout Banner -->
+    <div id="timeout-banner" class="timeout-banner">
+      <div class="win-icon">⏰</div>
+      <h2>Zeit abgelaufen!</h2>
+      <p>Versuch es nochmal — du schaffst das!</p>
+      <button id="btn-retry" class="btn-retry">Nochmal versuchen</button>
     </div>
   </div>
 
