@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-2';
+const GAME_VERSION = '20260613-3';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -418,8 +418,10 @@ function drawClueIndicator(clue) {
   const fontSize  = Math.max(11, Math.round(CELL * 0.40));
   const innerPad  = Math.max(5, Math.round(CELL * 0.15)); // padding around text
   const snug      = fontSize + innerPad * 2;              // rect snug around number
-  const elongated = Math.min(CELL - 4, snug * 2.4);       // stretched for direction
-  const maxDim    = CELL - 4;
+  // maxDim must not exceed the inner area of the selection rect (same selPad as paintRect)
+  const selPad    = Math.max(2, Math.round(CELL * 0.05));
+  const maxDim    = CELL - selPad * 2;
+  const elongated = Math.min(maxDim, snug * 2.4);         // stretched for direction
 
   if (!clue.hint) {
     // "+" cross: two bars, each snug-height thick and elongated-length long
