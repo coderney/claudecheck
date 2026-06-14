@@ -50,6 +50,8 @@ export function getGameHtml(): string {
     + '      <button id="btn-retry" class="btn-retry">Nochmal versuchen</button>\n'
     + '    </div>\n'
     + '  </div>\n'
+    + '  <script>window.onerror=function(m,s,l){document.body.style.background="white";document.body.innerHTML="<pre style=\'color:red;padding:40px;font-size:14px;white-space:pre-wrap\'>"+m+" @ line "+l+"</pre>";return true;};</script>\n'
+    + '  <script>document.addEventListener("DOMContentLoaded",function(){var d=document.getElementById("menu");if(d){d.style.display="flex";}});</script>\n'
     + '  <script>' + js + '</script>\n'
     + '</body>\n'
     + '</html>';
