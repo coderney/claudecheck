@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "ios": "expo start --ios"
+    "ios": "expo start --ios",
+    "build:preview": "eas build --platform ios --profile preview"
   },
   "dependencies": {
     "expo": "~54.0.34",
