@@ -10,16 +10,10 @@ function App() {
     <View style={styles.container}>
       <StatusBar style="dark" hidden />
       <WebView
-        source={{ html: getGameHtml(), baseUrl: 'https://localhost' }}
+        source={{ html: '<html><body style="background:red;margin:0;width:100%;height:100%;"><h1 style="color:white;padding:40px">WebView works!</h1></body></html>' }}
         style={styles.webview}
         javaScriptEnabled={true}
-        domStorageEnabled={true}
-        scrollEnabled={false}
-        bounces={false}
-        overScrollMode="never"
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        allowsBackForwardNavigationGestures={false}
+        originWhitelist={['*']}
       />
     </View>
   );
