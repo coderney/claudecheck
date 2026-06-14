@@ -3100,8 +3100,9 @@ function loadProgress() {
       const data = JSON.parse(raw);
       solved        = Array.isArray(data.solved)        ? data.solved        : [];
       shuffledOrder = Array.isArray(data.shuffledOrder) ? data.shuffledOrder : [];
+      stars         = (data.stars && typeof data.stars === 'object') ? data.stars : {};
     }
-  } catch (_) { solved = []; shuffledOrder = []; }
+  } catch (_) { solved = []; shuffledOrder = []; stars = {}; }
 }
 
 async function checkForUpdate() {
@@ -3123,7 +3124,7 @@ async function checkForUpdate() {
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, shuffledOrder }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, shuffledOrder, stars }));
   } catch (_) {}
 }
 
@@ -3150,6 +3151,8 @@ let timerInterval  = null;
 let timeRemaining  = 0;
 let timerRunning   = false;
 let timeExtended   = false;
+let stars          = {};
+let isDailyChallenge = false;
 
 // ── DOM ───────────────────────────────────────────────────────────────────
 const menuScreen    = document.getElementById('menu');
@@ -3200,6 +3203,8 @@ function updateTimerDisplay() {
 
 function onTimeout() {
   timerEl.classList.add('stopped');
+  playFail();
+  haptic('error');
   timeoutBanner.classList.add('visible');
 }
 
@@ -3236,6 +3241,7 @@ function findNextLevel() {
 
 function showMenu() {
   stopTimer();
+  isDailyChallenge = false;
   menuScreen.classList.add('active');
   gameScreen.classList.remove('active');
   currentLevelIndex = -1;
@@ -3253,6 +3259,12 @@ function showMenu() {
       ? 'Alle Level abgeschlossen! 🎉'
       : 'Du bist in Level ' + (solved.length + 1);
   }
+  const starsEl = document.getElementById('menu-stars');
+  if (starsEl) {
+    const total = Object.values(stars).reduce((s, v) => s + v, 0);
+    starsEl.textContent = total > 0 ? '⭐ ' + total + ' / ' + (LEVELS.length * 3) + ' Sterne' : '';
+  }
+  updateDailyCard();
 }
 
 function showGame(idx) {
@@ -3261,18 +3273,29 @@ function showGame(idx) {
   dragActive  = false;
   timeExtended = false;
   const extendBtn = document.getElementById('btn-extend-time');
-  if (extendBtn) extendBtn.style.display = '';
+  if (extendBtn) extendBtn.style.display = isDailyChallenge ? 'none' : '';
   winBanner.classList.remove('visible');
   timeoutBanner.classList.remove('visible');
   timerEl.classList.remove('stopped', 'urgent');
-  titleEl.textContent = 'Level ' + (shuffledOrder.indexOf(idx) + 1);
-  timeRemaining = LEVELS[idx].timeLimit;
+  if (isDailyChallenge) {
+    titleEl.textContent = 'Tages-Challenge';
+    timerEl.style.display = 'none';
+    timeRemaining = 0;
+  } else {
+    timerEl.style.display = '';
+    titleEl.textContent = 'Level ' + (shuffledOrder.indexOf(idx) + 1);
+    timeRemaining = LEVELS[idx].timeLimit;
+  }
   updateTimerDisplay();
   menuScreen.classList.remove('active');
   gameScreen.classList.add('active');
   requestAnimationFrame(() => requestAnimationFrame(() => {
     resize();
-    showStartOverlay(timeRemaining, startTimer);
+    if (isDailyChallenge) {
+      draw();
+    } else {
+      showStartOverlay(timeRemaining, startTimer);
+    }
   }));
 }
 
@@ -3288,6 +3311,104 @@ function showStartOverlay(seconds, callback) {
   }, 1800);
 }
 
+
+// ── Daily Challenge ───────────────────────────────────────────────────────
+function getDailyKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getDailyIndex() {
+  return Math.floor(Date.now() / 86400000) % LEVELS.length;
+}
+
+function getDailyDate() {
+  const d = new Date();
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  return d.getDate() + '. ' + months[d.getMonth()];
+}
+
+function isDailySolved() {
+  try {
+    const raw = localStorage.getItem('patches_daily');
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    return data.date === getDailyKey() && data.solved;
+  } catch (_) { return false; }
+}
+
+function saveDailySolved() {
+  try {
+    localStorage.setItem('patches_daily', JSON.stringify({ date: getDailyKey(), solved: true }));
+  } catch (_) {}
+}
+
+function updateDailyCard() {
+  const card = document.getElementById('daily-card');
+  if (!card) return;
+  const solved_ = isDailySolved();
+  const level = LEVELS[getDailyIndex()];
+  const dateEl   = card.querySelector('.daily-date');
+  const diffEl   = card.querySelector('.daily-diff');
+  const statusEl = card.querySelector('.daily-status');
+  if (dateEl)   dateEl.textContent   = getDailyDate();
+  if (diffEl)   diffEl.textContent   = level.difficulty;
+  if (statusEl) statusEl.textContent = solved_ ? '✓ Heute geschafft!' : '';
+  card.classList.toggle('daily-solved', solved_);
+}
+
+function showWinStars(count) {
+  const el = document.getElementById('win-stars');
+  if (!el) return;
+  el.innerHTML = '';
+  for (let i = 1; i <= 3; i++) {
+    const span = document.createElement('span');
+    span.className = i <= count ? 'win-star earned' : 'win-star empty';
+    span.textContent = i <= count ? '★' : '☆';
+    span.style.animationDelay = (i * 150) + 'ms';
+    el.appendChild(span);
+  }
+}
+
+// ── Sound & Haptics ───────────────────────────────────────────────────────
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, duration, type, volume) {
+  try {
+    const ctx = getAudioCtx();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    osc.type = type || 'sine';
+    gain.gain.setValueAtTime(volume || 0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch (_) {}
+}
+
+function playClick() { playTone(700, 0.04, 'sine', 0.12); }
+function playPop()   { playTone(320, 0.12, 'sine', 0.3); }
+function playError() { playTone(150, 0.15, 'sawtooth', 0.2); }
+function playWin() {
+  playTone(523, 0.15, 'sine', 0.28);
+  setTimeout(function() { playTone(659, 0.15, 'sine', 0.28); }, 130);
+  setTimeout(function() { playTone(784, 0.35, 'sine', 0.28); }, 260);
+}
+function playFail() {
+  playTone(280, 0.18, 'sine', 0.25);
+  setTimeout(function() { playTone(190, 0.28, 'sine', 0.2); }, 170);
+}
+
+function haptic(style) {
+  try { window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'haptic', style: style })); } catch (_) {}
+}
 
 // ── Sizing ────────────────────────────────────────────────────────────────
 function resize() {
@@ -3481,7 +3602,9 @@ function cellFromPoint(clientX, clientY) {
 
 canvas.addEventListener('touchstart', e => {
   e.preventDefault();
-  if (!timerRunning) return;
+  if (!timerRunning && !isDailyChallenge) return;
+  playClick();
+  haptic('light');
   const t = e.changedTouches[0];
   dragActive = true;
   dragStartCell = cellFromPoint(t.clientX, t.clientY);
@@ -3511,7 +3634,9 @@ canvas.addEventListener('touchend', e => {
 canvas.addEventListener('touchcancel', () => { dragActive = false; draw(); });
 
 canvas.addEventListener('mousedown', e => {
-  if (!timerRunning) return;
+  if (!timerRunning && !isDailyChallenge) return;
+  playClick();
+  haptic('light');
   dragActive = true;
   dragStartCell = cellFromPoint(e.clientX, e.clientY);
   dragCurrentCell = { ...dragStartCell };
@@ -3570,6 +3695,8 @@ function placeRect() {
   while (usedColors.has(colorIdx) && colorIdx < PALETTE.length - 1) colorIdx++;
 
   rectangles.push({ r0, c0, r1, c1, colorIdx });
+  playPop();
+  haptic('medium');
 }
 
 function overlaps(rect, r0, c0, r1, c1) {
@@ -3605,16 +3732,29 @@ function checkWin() {
   // Solved!
   stopTimer();
   timerEl.classList.add('stopped');
-  if (!solved.includes(level.id)) {
-    solved.push(level.id);
-    saveProgress();
-  }
+  playWin();
+  haptic('success');
 
-  const nextIdx = findNextLevel();
-  winMsg.textContent = nextIdx >= 0
-    ? 'Weiter zum nächsten Rätsel?'
-    : 'Alle Rätsel gelöst! 🎉';
-  btnNext.textContent = nextIdx >= 0 ? 'Nächstes Rätsel →' : 'Zurück zum Menü';
+  if (isDailyChallenge) {
+    saveDailySolved();
+    const starsEl = document.getElementById('win-stars');
+    if (starsEl) starsEl.innerHTML = '<span style="font-size:2rem">🏆</span>';
+    winMsg.textContent = 'Heute geschafft!';
+    btnNext.textContent = 'Zurück zum Menü';
+  } else {
+    if (!solved.includes(level.id)) {
+      const elapsed = LEVELS[currentLevelIndex].timeLimit - timeRemaining;
+      const ratio   = elapsed / LEVELS[currentLevelIndex].timeLimit;
+      const earned  = timeExtended ? 1 : ratio <= 0.5 ? 3 : ratio <= 0.9 ? 2 : 1;
+      if ((stars[level.id] || 0) < earned) stars[level.id] = earned;
+      solved.push(level.id);
+      saveProgress();
+    }
+    showWinStars(stars[level.id] || 0);
+    const nextIdx = findNextLevel();
+    winMsg.textContent = nextIdx >= 0 ? 'Weiter zum nächsten Rätsel?' : 'Alle Rätsel gelöst! 🎉';
+    btnNext.textContent = nextIdx >= 0 ? 'Nächstes Rätsel →' : 'Zurück zum Menü';
+  }
   winBanner.classList.add('visible');
 }
 
@@ -3631,6 +3771,11 @@ const btnInstrClose = document.getElementById('btn-instructions-close');
 if (btnInstrClose) btnInstrClose.addEventListener('click', () => {
   const ov = document.getElementById('instructions-overlay');
   if (ov) ov.classList.remove('visible');
+});
+
+const dailyCard = document.getElementById('daily-card');
+if (dailyCard) dailyCard.addEventListener('click', () => {
+  if (!isDailySolved()) { isDailyChallenge = true; showGame(getDailyIndex()); }
 });
 
 document.getElementById('btn-reset').addEventListener('click', () => {
@@ -3656,6 +3801,7 @@ document.getElementById('btn-extend-time').addEventListener('click', () => {
 });
 
 btnNext.addEventListener('click', () => {
+  if (isDailyChallenge) { isDailyChallenge = false; showMenu(); return; }
   const nextIdx = findNextLevel();
   if (nextIdx >= 0) showGame(nextIdx);
   else showMenu();

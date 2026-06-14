@@ -310,6 +310,92 @@ html, body {
 }
 .btn-instructions-close:active { filter: brightness(0.9); }
 
+.menu-stars {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--neutral-500);
+  letter-spacing: -0.01em;
+  min-height: 1.2em;
+}
+
+/* ── Win Stars ── */
+.win-stars {
+  display: flex;
+  gap: var(--sp-1);
+  justify-content: center;
+  min-height: 2rem;
+}
+.win-star {
+  font-size: 1.8rem;
+  line-height: 1;
+  display: inline-block;
+  animation: starPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.win-star.earned { color: #f5a623; }
+.win-star.empty  { color: var(--neutral-200); }
+@keyframes starPop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ── Daily Card ── */
+.daily-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  background: white;
+  border: 1.5px solid var(--primary-200);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-3) var(--sp-4);
+  width: 100%;
+  max-width: 320px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.daily-card:active { transform: scale(0.97); }
+.daily-card.daily-solved {
+  border-color: var(--success);
+  background: #f0fdf8;
+  cursor: default;
+}
+.daily-card.daily-solved:active { transform: none; }
+.daily-icon { font-size: 1.5rem; flex-shrink: 0; }
+.daily-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+.daily-label {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary-800);
+  letter-spacing: -0.01em;
+}
+.daily-date {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+}
+.daily-diff {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--primary-600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.daily-status {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--success);
+  flex-shrink: 0;
+}
+
 .btn-hard-reset {
   font-family: var(--font-heading);
   font-size: 0.75rem;

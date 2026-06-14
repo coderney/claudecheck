@@ -1,5 +1,6 @@
 import { registerRootComponent } from 'expo';
 import { StatusBar } from 'expo-status-bar';
+import * as Haptics from 'expo-haptics';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -25,9 +26,19 @@ function App() {
         showsVerticalScrollIndicator={false}
         allowsBackForwardNavigationGestures={false}
         onMessage={(e) => {
-          if (e.nativeEvent.data === 'reset') {
-            setKey(k => k + 1);
-          }
+          const raw = e.nativeEvent.data;
+          if (raw === 'reset') { setKey(k => k + 1); return; }
+          try {
+            const msg = JSON.parse(raw);
+            if (msg.type === 'haptic') {
+              switch (msg.style) {
+                case 'light':   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); break;
+                case 'medium':  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); break;
+                case 'success': Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); break;
+                case 'error':   Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error); break;
+              }
+            }
+          } catch (_) {}
         }}
       />
     </View>
