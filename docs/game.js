@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260614-3';
+const GAME_VERSION = '20260614-4';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -3098,9 +3098,10 @@ function loadProgress() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const data = JSON.parse(raw);
-      solved = Array.isArray(data.solved) ? data.solved : [];
+      solved        = Array.isArray(data.solved)        ? data.solved        : [];
+      shuffledOrder = Array.isArray(data.shuffledOrder) ? data.shuffledOrder : [];
     }
-  } catch (_) { solved = []; }
+  } catch (_) { solved = []; shuffledOrder = []; }
 }
 
 async function checkForUpdate() {
@@ -3122,7 +3123,7 @@ async function checkForUpdate() {
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, shuffledOrder }));
   } catch (_) {}
 }
 
@@ -3136,6 +3137,7 @@ let latestServerVersion = null; // populated by checkForUpdate
 let currentLevelIndex = -1;
 let rectangles     = [];
 let solved         = [];
+let shuffledOrder  = [];
 let dragActive     = false;
 let dragStartCell  = null;
 let dragCurrentCell = null;
@@ -3147,6 +3149,7 @@ let DPR = 1;
 let timerInterval  = null;
 let timeRemaining  = 0;
 let timerRunning   = false;
+let timeExtended   = false;
 
 // ── DOM ───────────────────────────────────────────────────────────────────
 const menuScreen    = document.getElementById('menu');
@@ -3201,11 +3204,34 @@ function onTimeout() {
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────
-function findCurrentLevel() {
-  for (let i = 0; i < LEVELS.length; i++) {
-    if (!solved.includes(LEVELS[i].id)) return i;
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return 0; // all solved → restart from beginning
+  return arr;
+}
+
+function initShuffledOrder() {
+  if (shuffledOrder.length !== LEVELS.length) {
+    shuffledOrder = shuffle(LEVELS.map((_, i) => i));
+    saveProgress();
+  }
+}
+
+function findCurrentLevel() {
+  for (const idx of shuffledOrder) {
+    if (!solved.includes(LEVELS[idx].id)) return idx;
+  }
+  return shuffledOrder[0]; // all solved → restart from beginning
+}
+
+function findNextLevel() {
+  const pos = shuffledOrder.indexOf(currentLevelIndex);
+  for (let i = pos + 1; i < shuffledOrder.length; i++) {
+    if (!solved.includes(LEVELS[shuffledOrder[i]].id)) return shuffledOrder[i];
+  }
+  return -1;
 }
 
 function showMenu() {
@@ -3213,7 +3239,8 @@ function showMenu() {
   menuScreen.classList.add('active');
   gameScreen.classList.remove('active');
   currentLevelIndex = -1;
-  const btn = document.getElementById('btn-continue');
+  const btn  = document.getElementById('btn-continue');
+  const hint = document.getElementById('menu-level-hint');
   if (solved.length === 0) {
     btn.textContent = 'Spiel starten';
   } else if (solved.length >= LEVELS.length) {
@@ -3221,16 +3248,24 @@ function showMenu() {
   } else {
     btn.textContent = 'Spiel fortsetzen';
   }
+  if (hint) {
+    hint.textContent = solved.length >= LEVELS.length
+      ? 'Alle Level abgeschlossen! 🎉'
+      : 'Du bist in Level ' + (solved.length + 1);
+  }
 }
 
 function showGame(idx) {
   currentLevelIndex = idx;
   rectangles  = [];
   dragActive  = false;
+  timeExtended = false;
+  const extendBtn = document.getElementById('btn-extend-time');
+  if (extendBtn) extendBtn.style.display = '';
   winBanner.classList.remove('visible');
   timeoutBanner.classList.remove('visible');
   timerEl.classList.remove('stopped', 'urgent');
-  titleEl.textContent = 'Level ' + (idx + 1);
+  titleEl.textContent = 'Level ' + (shuffledOrder.indexOf(idx) + 1);
   timeRemaining = LEVELS[idx].timeLimit;
   updateTimerDisplay();
   menuScreen.classList.remove('active');
@@ -3573,13 +3608,11 @@ function checkWin() {
     saveProgress();
   }
 
-  const nextIdx = currentLevelIndex + 1;
-  const hasNext = nextIdx < LEVELS.length && isUnlocked(nextIdx);
-  // isUnlocked(nextIdx) will now be true since we just solved current
-  winMsg.textContent = nextIdx < LEVELS.length
+  const nextIdx = findNextLevel();
+  winMsg.textContent = nextIdx >= 0
     ? 'Weiter zum nächsten Rätsel?'
     : 'Alle Rätsel gelöst! 🎉';
-  btnNext.textContent = nextIdx < LEVELS.length ? 'Nächstes Rätsel →' : 'Zurück zum Menü';
+  btnNext.textContent = nextIdx >= 0 ? 'Nächstes Rätsel →' : 'Zurück zum Menü';
   winBanner.classList.add('visible');
 }
 
@@ -3589,6 +3622,9 @@ document.getElementById('btn-continue').addEventListener('click', () => showGame
 
 document.getElementById('btn-reset').addEventListener('click', () => {
   rectangles = [];
+  timeExtended = false;
+  const extendBtn = document.getElementById('btn-extend-time');
+  if (extendBtn) extendBtn.style.display = '';
   winBanner.classList.remove('visible');
   timeoutBanner.classList.remove('visible');
   timerEl.classList.remove('stopped');
@@ -3597,14 +3633,26 @@ document.getElementById('btn-reset').addEventListener('click', () => {
   draw();
 });
 
+document.getElementById('btn-extend-time').addEventListener('click', () => {
+  if (timeExtended) return;
+  timeExtended = true;
+  document.getElementById('btn-extend-time').style.display = 'none';
+  timeRemaining = 15;
+  timeoutBanner.classList.remove('visible');
+  startTimer();
+});
+
 btnNext.addEventListener('click', () => {
-  const nextIdx = currentLevelIndex + 1;
-  if (nextIdx < LEVELS.length) showGame(nextIdx);
+  const nextIdx = findNextLevel();
+  if (nextIdx >= 0) showGame(nextIdx);
   else showMenu();
 });
 
 document.getElementById('btn-retry').addEventListener('click', () => {
   rectangles = [];
+  timeExtended = false;
+  const extendBtn = document.getElementById('btn-extend-time');
+  if (extendBtn) extendBtn.style.display = '';
   timeoutBanner.classList.remove('visible');
   timeRemaining = LEVELS[currentLevelIndex].timeLimit;
   startTimer();
@@ -3642,5 +3690,6 @@ if ('serviceWorker' in navigator) {
 }
 
 loadProgress();
+initShuffledOrder();
 checkForUpdate();
 showMenu();
