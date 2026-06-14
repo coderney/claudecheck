@@ -412,6 +412,58 @@ html, body {
 .btn-extend-time { background: var(--primary-600); }
 .btn-next:active, .btn-retry:active, .btn-extend-time:active { filter: brightness(0.9); }
 
+/* ════════════════════════════════════════
+   CONFIRMATION DIALOG
+════════════════════════════════════════ */
+.confirm-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 400;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.confirm-overlay.visible { opacity: 1; pointer-events: all; }
+
+.confirm-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5) var(--sp-4);
+  max-width: 300px;
+  width: 85%;
+  box-shadow: var(--shadow-xl);
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--sp-3);
+}
+.confirm-msg {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--neutral-800);
+  text-align: center;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+.confirm-buttons {
+  display: flex;
+  gap: var(--sp-2);
+  width: 100%;
+}
+.btn-confirm-yes, .btn-confirm-no {
+  flex: 1;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--sp-2) 0;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.btn-confirm-yes { background: var(--error); color: white; }
+.btn-confirm-no  { background: var(--neutral-200); color: var(--neutral-700); }
+.btn-confirm-yes:active, .btn-confirm-no:active { filter: brightness(0.9); }
+
 @keyframes popIn {
   from { transform: scale(0.85); opacity: 0; }
   to   { transform: scale(1);    opacity: 1; }

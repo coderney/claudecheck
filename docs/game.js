@@ -3657,14 +3657,14 @@ document.getElementById('btn-retry').addEventListener('click', () => {
   if (extendBtn) extendBtn.style.display = '';
   timeoutBanner.classList.remove('visible');
   timeRemaining = LEVELS[currentLevelIndex].timeLimit;
-  startTimer();
+  showStartOverlay(timeRemaining, startTimer);
   draw();
 });
 
 window.addEventListener('resize', () => { if (currentLevelIndex >= 0) resize(); });
 
 // ── Hard Reset ────────────────────────────────────────────────────────────
-document.getElementById('btn-hard-reset').addEventListener('click', async () => {
+async function doHardReset() {
   try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
 
   try {
@@ -3684,10 +3684,22 @@ document.getElementById('btn-hard-reset').addEventListener('click', async () => 
   if (window.ReactNativeWebView) {
     window.ReactNativeWebView.postMessage('reset');
   } else {
-    // Web: append timestamp so iOS fetches a fresh copy instead of using disk cache
     const base = window.location.href.replace(/\?.*$/, '');
     window.location.replace(base + '?r=' + Date.now());
   }
+}
+
+document.getElementById('btn-hard-reset').addEventListener('click', () => {
+  document.getElementById('confirm-overlay').classList.add('visible');
+});
+
+document.getElementById('btn-confirm-yes').addEventListener('click', () => {
+  document.getElementById('confirm-overlay').classList.remove('visible');
+  doHardReset();
+});
+
+document.getElementById('btn-confirm-no').addEventListener('click', () => {
+  document.getElementById('confirm-overlay').classList.remove('visible');
 });
 
 // ── Boot ──────────────────────────────────────────────────────────────────

@@ -80,6 +80,17 @@
       .then(function(d) { return d ? d.version : null; })
       .catch(function() { return null; });
   </script>
+  <!-- Confirmation Dialog -->
+  <div id="confirm-overlay" class="confirm-overlay">
+    <div class="confirm-card">
+      <p class="confirm-msg">Willst du deinen Spielstand wirklich zurücksetzen?</p>
+      <div class="confirm-buttons">
+        <button id="btn-confirm-no"  class="btn-confirm-no">Nein</button>
+        <button id="btn-confirm-yes" class="btn-confirm-yes">Ja</button>
+      </div>
+    </div>
+  </div>
+
   <script src="./game.js"></script>
 </body>
 </html>
