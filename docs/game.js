@@ -1,126 +1,3079 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260613-12';
+const GAME_VERSION = '20260614-1';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
 // timeLimit: seconds allowed for this level
 
 const LEVELS = [
-  // ── Level 0: 4×4 — all hints, 2 min ──────────────────────────────────
-  // A rows0-1 cols0-1 (2×2=4)  B rows0-1 cols2-3 (2×2=4)
-  // C row2    cols0-1 (1×2=2)  D rows2-3 cols2-3 (2×2=4)
-  // E row3    cols0-1 (1×2=2)
   {
-    id: 0, name: 'Leicht 1', size: 4, difficulty: 'Leicht', timeLimit: 30,
-    clues: [
-      {r:0, c:0, v:4, hint:'s'},
-      {r:1, c:3, v:4, hint:'s'},
-      {r:2, c:1, v:2, hint:'h'},
-      {r:2, c:2, v:4, hint:'s'},
-      {r:3, c:0, v:2, hint:'h'},
+    "id": 0,
+    "name": "Leicht 1",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 30,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 2,
+        "hint": "h"
+      }
     ]
   },
-
-  // ── Level 1: 5×5 — 6/8 hints, 3 min ─────────────────────────────────
-  // A row0    cols0-2 (1×3=3,'h')  B rows0-1 cols3-4 (2×2=4,'s')
-  // C rows1-2 cols0-1 (2×2=4,null) D rows1-2 col2   (2×1=2,'v')
-  // E row2    cols3-4 (1×2=2,'h')  F row3    cols0-2 (1×3=3,'h')
-  // G row3    cols3-4 (1×2=2,null) H row4    cols0-4 (1×5=5,'h')
   {
-    id: 1, name: 'Leicht 2', size: 5, difficulty: 'Leicht', timeLimit: 75,
-    clues: [
-      {r:0, c:1, v:3, hint:'h'},
-      {r:0, c:4, v:4, hint:'s'},
-      {r:1, c:0, v:4, hint:null},
-      {r:2, c:2, v:2, hint:'v'},
-      {r:2, c:3, v:2, hint:'h'},
-      {r:3, c:1, v:3, hint:'h'},
-      {r:3, c:4, v:2, hint:null},
-      {r:4, c:2, v:5, hint:'h'},
+    "id": 1,
+    "name": "Leicht 2",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 35,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 1,
+        "hint": "s"
+      }
     ]
   },
-
-  // ── Level 2: 6×6 — 8/12 hints, 5 min ────────────────────────────────
-  // A rows0-1 cols0-1 (2×2=4,'s')  B row0    cols2-3 (1×2=2,'h')
-  // C rows0-1 cols4-5 (2×2=4,'s')  D row1    cols2-3 (1×2=2,null)
-  // E row2    cols0-2 (1×3=3,'h')  F row2    cols3-5 (1×3=3,'h')
-  // G rows3-5 col0   (3×1=3,'v')  H row3    cols1-3 (1×3=3,null)
-  // I row3    cols4-5 (1×2=2,null) J row4    cols1-2 (1×2=2,'h')
-  // K row4    cols3-5 (1×3=3,'h')  L row5    cols1-5 (1×5=5,'h')
   {
-    id: 2, name: 'Mittel 1', size: 6, difficulty: 'Mittel', timeLimit: 120,
-    clues: [
-      {r:0, c:1, v:4, hint:'s'},
-      {r:0, c:2, v:2, hint:'h'},
-      {r:1, c:4, v:4, hint:'s'},
-      {r:1, c:3, v:2, hint:null},
-      {r:2, c:1, v:3, hint:'h'},
-      {r:2, c:4, v:3, hint:'h'},
-      {r:4, c:0, v:3, hint:'v'},
-      {r:3, c:2, v:3, hint:null},
-      {r:3, c:5, v:2, hint:null},
-      {r:4, c:2, v:2, hint:'h'},
-      {r:4, c:4, v:3, hint:'h'},
-      {r:5, c:3, v:5, hint:'h'},
+    "id": 2,
+    "name": "Leicht 3",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 40,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 3,
+        "hint": "h"
+      }
     ]
   },
-
-  // ── Level 3: 7×7 — 7/12 hints, 7 min ────────────────────────────────
-  // A rows0-1 cols0-2 (2×3=6,'h')  B row0    cols3-6 (1×4=4,null)
-  // C row1    cols3-6 (1×4=4,null) D rows2-3 cols0-1 (2×2=4,'s')
-  // E row2    cols2-4 (1×3=3,'h')  F rows2-3 cols5-6 (2×2=4,'s')
-  // G row3    cols2-4 (1×3=3,null) H rows4-5 cols0-2 (2×3=6,'h')
-  // I row4    cols3-5 (1×3=3,null) J rows4-6 col6   (3×1=3,'v')
-  // K row5    cols3-5 (1×3=3,null) L row6    cols0-5 (1×6=6,'h')
   {
-    id: 3, name: 'Mittel 2', size: 7, difficulty: 'Mittel', timeLimit: 210,
-    clues: [
-      {r:0, c:1, v:6, hint:'h'},
-      {r:0, c:5, v:4, hint:null},
-      {r:1, c:4, v:4, hint:null},
-      {r:2, c:0, v:4, hint:'s'},
-      {r:2, c:3, v:3, hint:'h'},
-      {r:2, c:5, v:4, hint:'s'},
-      {r:3, c:3, v:3, hint:null},
-      {r:4, c:1, v:6, hint:'h'},
-      {r:4, c:4, v:3, hint:null},
-      {r:5, c:6, v:3, hint:'v'},
-      {r:5, c:4, v:3, hint:null},
-      {r:6, c:3, v:6, hint:'h'},
+    "id": 3,
+    "name": "Leicht 4",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 45,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      }
     ]
   },
-
-  // ── Level 4: 8×8 — 5/15 hints, 10 min ───────────────────────────────
-  // A rows0-1 cols0-3 (2×4=8,'h')  B rows0-1 cols4-5 (2×2=4,null)
-  // C rows0-1 cols6-7 (2×2=4,null) D rows2-3 cols0-1 (2×2=4,null)
-  // E row2    cols2-4 (1×3=3,null) F rows2-3 cols5-7 (2×3=6,'h')
-  // G row3    cols2-4 (1×3=3,null) H rows4-5 cols0-2 (2×3=6,'h')
-  // I row4    cols3-5 (1×3=3,null) J rows4-5 cols6-7 (2×2=4,'s')
-  // K row5    cols3-5 (1×3=3,null) L row6    cols0-3 (1×4=4,null)
-  // M row6    cols4-7 (1×4=4,null) N row7    cols0-3 (1×4=4,null)
-  // O row7    cols4-7 (1×4=4,'h')
   {
-    id: 4, name: 'Schwer 1', size: 8, difficulty: 'Schwer', timeLimit: 360,
-    clues: [
-      {r:1, c:2, v:8, hint:'h'},
-      {r:0, c:4, v:4, hint:null},
-      {r:1, c:7, v:4, hint:null},
-      {r:2, c:0, v:4, hint:null},
-      {r:2, c:3, v:3, hint:null},
-      {r:3, c:6, v:6, hint:'h'},
-      {r:3, c:4, v:3, hint:null},
-      {r:5, c:1, v:6, hint:'h'},
-      {r:4, c:4, v:3, hint:null},
-      {r:4, c:6, v:4, hint:'s'},
-      {r:5, c:3, v:3, hint:null},
-      {r:6, c:1, v:4, hint:null},
-      {r:6, c:6, v:4, hint:null},
-      {r:7, c:2, v:4, hint:null},
-      {r:7, c:6, v:4, hint:'h'},
+    "id": 4,
+    "name": "Leicht 5",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 50,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 1,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      }
     ]
   },
+  {
+    "id": 5,
+    "name": "Leicht 6",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 55,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Leicht 7",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 60,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 1,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 1,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Leicht 8",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 65,
+    "clues": [
+      {
+        "r": 0,
+        "c": 2,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 1,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Leicht 9",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 70,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 1,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Leicht 10",
+    "size": 4,
+    "difficulty": "Leicht",
+    "timeLimit": 75,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 4,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Mittel 1",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 60,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 5,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 6,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Mittel 2",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 70,
+    "clues": [
+      {
+        "r": 0,
+        "c": 2,
+        "v": 5,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Mittel 3",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 80,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 1,
+        "hint": "s"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Mittel 4",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 90,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 1,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 1,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 3,
+        "hint": "v"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Mittel 5",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 100,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Mittel 6",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 110,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 1,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "Mittel 7",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 120,
+    "clues": [
+      {
+        "r": 0,
+        "c": 2,
+        "v": 5,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Mittel 8",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 130,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 4,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Mittel 9",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 140,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Mittel 10",
+    "size": 5,
+    "difficulty": "Mittel",
+    "timeLimit": 150,
+    "clues": [
+      {
+        "r": 2,
+        "c": 0,
+        "v": 5,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Schwer 1",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 90,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 4,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 4,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "Schwer 2",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 105,
+    "clues": [
+      {
+        "r": 0,
+        "c": 2,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 5,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 5,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 1,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "name": "Schwer 3",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 120,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 4,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 5,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 1,
+        "v": 3,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "name": "Schwer 4",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 135,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "name": "Schwer 5",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 150,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 4,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 4,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "name": "Schwer 6",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 165,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 4,
+        "v": 9,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 5,
+        "c": 4,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "name": "Schwer 7",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 180,
+    "clues": [
+      {
+        "r": 0,
+        "c": 2,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 1,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "name": "Schwer 8",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 200,
+    "clues": [
+      {
+        "r": 1,
+        "c": 1,
+        "v": 9,
+        "hint": "s"
+      },
+      {
+        "r": 0,
+        "c": 4,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 5,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "name": "Schwer 9",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 220,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "name": "Schwer 10",
+    "size": 6,
+    "difficulty": "Schwer",
+    "timeLimit": 240,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 0,
+        "c": 4,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 1,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 3,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 5,
+        "v": 2,
+        "hint": "v"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "name": "Experte 1",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 150,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 5,
+        "v": 9,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 5,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 6,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "name": "Experte 2",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 175,
+    "clues": [
+      {
+        "r": 0,
+        "c": 3,
+        "v": 7,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 5,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 6,
+        "c": 6,
+        "v": 1,
+        "hint": "s"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "name": "Experte 3",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 200,
+    "clues": [
+      {
+        "r": 1,
+        "c": 1,
+        "v": 9,
+        "hint": "s"
+      },
+      {
+        "r": 0,
+        "c": 4,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 6,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 5,
+        "c": 6,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 3,
+        "v": 4,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "name": "Experte 4",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 225,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 5,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 5,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 6,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "name": "Experte 5",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 250,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 5,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 5,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 1,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 3,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 5,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 1,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 1,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "name": "Experte 6",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 275,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 4,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 5,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 9,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 5,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 5,
+        "v": 6,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "name": "Experte 7",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 300,
+    "clues": [
+      {
+        "r": 0,
+        "c": 3,
+        "v": 7,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 1,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 2,
+        "c": 5,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 5,
+        "c": 3,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 5,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 1,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 3,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 5,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "name": "Experte 8",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 330,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 4,
+        "v": 5,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 5,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 5,
+        "v": 3,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 4,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 6,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 2,
+        "hint": "h"
+      },
+      {
+        "r": 6,
+        "c": 6,
+        "v": 1,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "name": "Experte 9",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 360,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 5,
+        "v": 9,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 5,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 6,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "name": "Experte 10",
+    "size": 7,
+    "difficulty": "Experte",
+    "timeLimit": 390,
+    "clues": [
+      {
+        "r": 0,
+        "c": 2,
+        "v": 7,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 5,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 1,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 5,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 5,
+        "v": 3,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "name": "Meister 1",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 240,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 5,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 3,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 1,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "name": "Meister 2",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 270,
+    "clues": [
+      {
+        "r": 0,
+        "c": 3,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 8,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 6,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 3,
+        "v": 3,
+        "hint": "h"
+      },
+      {
+        "r": 7,
+        "c": 6,
+        "v": 3,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "name": "Meister 3",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 300,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 6,
+        "v": 9,
+        "hint": "s"
+      },
+      {
+        "r": 1,
+        "c": 2,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 3,
+        "hint": "v"
+      },
+      {
+        "r": 3,
+        "c": 1,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 3,
+        "v": 4,
+        "hint": "h"
+      },
+      {
+        "r": 5,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 6,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "name": "Meister 4",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 330,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 8,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 0,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 6,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 5,
+        "v": 1,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 5,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 7,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 7,
+        "c": 4,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 7,
+        "v": 3,
+        "hint": "v"
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "name": "Meister 5",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 360,
+    "clues": [
+      {
+        "r": 0,
+        "c": 3,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 1,
+        "c": 5,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 0,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 5,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 7,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 5,
+        "v": 4,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "name": "Meister 6",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 390,
+    "clues": [
+      {
+        "r": 0,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 6,
+        "v": 8,
+        "hint": "v"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 8,
+        "hint": "v"
+      },
+      {
+        "r": 4,
+        "c": 3,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 7,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 6,
+        "v": 4,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "name": "Meister 7",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 420,
+    "clues": [
+      {
+        "r": 0,
+        "c": 4,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 0,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 1,
+        "c": 3,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 2,
+        "c": 6,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 4,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 2,
+        "v": 6,
+        "hint": "v"
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 7,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 7,
+        "c": 0,
+        "v": 2,
+        "hint": null
+      },
+      {
+        "r": 7,
+        "c": 4,
+        "v": 2,
+        "hint": "h"
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "name": "Meister 8",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 450,
+    "clues": [
+      {
+        "r": 1,
+        "c": 0,
+        "v": 8,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 3,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 0,
+        "c": 6,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 4,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 3,
+        "c": 6,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 0,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 5,
+        "c": 3,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 5,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 5,
+        "c": 6,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 7,
+        "c": 1,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 7,
+        "c": 3,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 7,
+        "c": 5,
+        "v": 2,
+        "hint": "v"
+      },
+      {
+        "r": 7,
+        "c": 6,
+        "v": 2,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "name": "Meister 9",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 480,
+    "clues": [
+      {
+        "r": 0,
+        "c": 1,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 1,
+        "c": 4,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 0,
+        "c": 6,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 0,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 2,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 6,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 0,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 5,
+        "v": 8,
+        "hint": "h"
+      },
+      {
+        "r": 7,
+        "c": 2,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 4,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 7,
+        "c": 6,
+        "v": 4,
+        "hint": null
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "name": "Meister 10",
+    "size": 8,
+    "difficulty": "Meister",
+    "timeLimit": 510,
+    "clues": [
+      {
+        "r": 3,
+        "c": 0,
+        "v": 8,
+        "hint": "v"
+      },
+      {
+        "r": 0,
+        "c": 2,
+        "v": 8,
+        "hint": null
+      },
+      {
+        "r": 0,
+        "c": 6,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 2,
+        "c": 1,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 3,
+        "c": 3,
+        "v": 4,
+        "hint": "s"
+      },
+      {
+        "r": 2,
+        "c": 6,
+        "v": 6,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 1,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 5,
+        "c": 3,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 4,
+        "c": 6,
+        "v": 6,
+        "hint": "h"
+      },
+      {
+        "r": 7,
+        "c": 1,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 3,
+        "v": 4,
+        "hint": null
+      },
+      {
+        "r": 6,
+        "c": 6,
+        "v": 6,
+        "hint": null
+      }
+    ]
+  }
 ];
 
 // ── Palette ───────────────────────────────────────────────────────────────
