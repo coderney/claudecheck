@@ -3296,7 +3296,7 @@ function resize() {
   const n    = LEVELS[currentLevelIndex].size;
   const wrapRect = wrap.getBoundingClientRect();
   const availW = Math.floor(wrapRect.width  - 32);
-  const availH = Math.floor(wrapRect.height - 12);
+  const availH = Math.floor(wrapRect.height - 24);
   const logicalSize = Math.max(80, Math.min(availW, availH));
 
   CELL     = Math.floor(logicalSize / n);

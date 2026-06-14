@@ -327,8 +327,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--sp-1) var(--sp-3);
-  overflow: hidden;
+  padding: var(--sp-2) var(--sp-3);
 }
 
 #board {
