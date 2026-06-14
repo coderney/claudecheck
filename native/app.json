@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Patches",
+    "slug": "patches-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "patches",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#f5f9fa"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.patches.game",
+      "requireFullScreen": true,
+      "infoPlist": {
+        "UIStatusBarStyle": "UIStatusBarStyleDarkContent",
+        "UIViewControllerBasedStatusBarAppearance": false
+      }
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
