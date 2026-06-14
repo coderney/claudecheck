@@ -1,24 +1,19 @@
 {
   "name": "patches-app",
-  "main": "expo-router/entry",
+  "main": "index.tsx",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "ios": "expo run:ios",
-    "android": "expo run:android"
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "expo": "~54.0.0",
-    "expo-router": "~5.0.0",
-    "expo-linking": "*",
-    "expo-constants": "*",
     "expo-status-bar": "~2.2.0",
-    "expo-splash-screen": "~0.30.0",
+    "expo-splash-screen": "*",
     "react": "18.3.1",
     "react-native": "0.76.9",
     "react-native-webview": "*",
-    "react-native-safe-area-context": "*",
-    "react-native-screens": "*"
+    "react-native-safe-area-context": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

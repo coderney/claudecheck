@@ -1,25 +1,19 @@
-import React, { useRef } from 'react';
+import { registerRootComponent } from 'expo';
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getGameHtml } from '../src/gameHtml';
+import { getGameHtml } from './src/gameHtml';
 
-export default function GameScreen() {
-  const webViewRef = useRef<WebView>(null);
-  const insets = useSafeAreaInsets();
-
+function App() {
   return (
-    <View style={[styles.container, {
-      paddingTop: insets.top,
-      paddingBottom: insets.bottom,
-    }]}>
+    <View style={styles.container}>
+      <StatusBar style="dark" hidden />
       <WebView
-        ref={webViewRef}
         source={{ html: getGameHtml(), baseUrl: 'https://localhost' }}
         style={styles.webview}
         javaScriptEnabled={true}
         domStorageEnabled={true}
-        allowsInlineMediaPlayback={true}
         scrollEnabled={false}
         bounces={false}
         overScrollMode="never"
@@ -27,7 +21,13 @@ export default function GameScreen() {
         showsVerticalScrollIndicator={false}
         allowsBackForwardNavigationGestures={false}
         onShouldStartLoadWithRequest={(request) => {
-          return request.url === 'about:blank' || request.url.startsWith('https://localhost') || request.url.startsWith('blob:') || request.url.startsWith('https://fonts.googleapis.com') || request.url.startsWith('https://fonts.gstatic.com');
+          return (
+            request.url === 'about:blank' ||
+            request.url.startsWith('https://localhost') ||
+            request.url.startsWith('blob:') ||
+            request.url.startsWith('https://fonts.googleapis.com') ||
+            request.url.startsWith('https://fonts.gstatic.com')
+          );
         }}
       />
     </View>
@@ -44,3 +44,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
+
+registerRootComponent(App);
