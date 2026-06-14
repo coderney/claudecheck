@@ -10,10 +10,25 @@ function App() {
     <View style={styles.container}>
       <StatusBar style="dark" hidden />
       <WebView
-        source={{ html: '<html><body style="background:red;margin:0;width:100%;height:100%;"><h1 style="color:white;padding:40px">WebView works!</h1></body></html>' }}
+        source={{ html: getGameHtml() }}
         style={styles.webview}
         javaScriptEnabled={true}
+        domStorageEnabled={true}
         originWhitelist={['*']}
+        scrollEnabled={false}
+        bounces={false}
+        overScrollMode="never"
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        allowsBackForwardNavigationGestures={false}
+        injectedJavaScript={`
+          window.onerror = function(msg, src, line) {
+            window.ReactNativeWebView && window.ReactNativeWebView.postMessage('ERR: ' + msg + ' @ ' + line);
+            return true;
+          };
+          true;
+        `}
+        onMessage={(e) => console.log('[WebView]', e.nativeEvent.data)}
       />
     </View>
   );
