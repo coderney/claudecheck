@@ -3295,8 +3295,9 @@ function resize() {
   const wrap = document.getElementById('board-wrap');
   const n    = LEVELS[currentLevelIndex].size;
   const wrapRect = wrap.getBoundingClientRect();
-  const availW = Math.floor(wrapRect.width  - 32);
-  const availH = Math.floor(wrapRect.height - 24);
+  const BORDER = 4; // 2px border each side, border-box
+  const availW = Math.floor(wrapRect.width  - 32) - BORDER;
+  const availH = Math.floor(wrapRect.height - 24) - BORDER;
   const logicalSize = Math.max(80, Math.min(availW, availH));
 
   CELL     = Math.floor(logicalSize / n);
@@ -3307,8 +3308,9 @@ function resize() {
   canvas.height = BOARD_PX * DPR;
   canvas.style.width  = BOARD_PX + 'px';
   canvas.style.height = BOARD_PX + 'px';
-  boardEl.style.width  = BOARD_PX + 'px';
-  boardEl.style.height = BOARD_PX + 'px';
+  // BOARD_PX + BORDER so the 2px border sits outside the canvas area
+  boardEl.style.width  = (BOARD_PX + BORDER) + 'px';
+  boardEl.style.height = (BOARD_PX + BORDER) + 'px';
 
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   draw();
