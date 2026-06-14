@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260614-2';
+const GAME_VERSION = '20260614-3';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -13,7 +13,7 @@ const LEVELS = [
     "name": "Leicht 1",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 30,
+    "timeLimit": 15,
     "clues": [
       {
         "r": 0,
@@ -46,7 +46,7 @@ const LEVELS = [
     "name": "Leicht 2",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 35,
+    "timeLimit": 16,
     "clues": [
       {
         "r": 0,
@@ -91,7 +91,7 @@ const LEVELS = [
     "name": "Leicht 3",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 40,
+    "timeLimit": 17,
     "clues": [
       {
         "r": 0,
@@ -136,7 +136,7 @@ const LEVELS = [
     "name": "Leicht 4",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 45,
+    "timeLimit": 18,
     "clues": [
       {
         "r": 0,
@@ -175,7 +175,7 @@ const LEVELS = [
     "name": "Leicht 5",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 50,
+    "timeLimit": 19,
     "clues": [
       {
         "r": 0,
@@ -220,7 +220,7 @@ const LEVELS = [
     "name": "Leicht 6",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 55,
+    "timeLimit": 20,
     "clues": [
       {
         "r": 0,
@@ -259,7 +259,7 @@ const LEVELS = [
     "name": "Leicht 7",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 60,
+    "timeLimit": 21,
     "clues": [
       {
         "r": 0,
@@ -304,7 +304,7 @@ const LEVELS = [
     "name": "Leicht 8",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 65,
+    "timeLimit": 21,
     "clues": [
       {
         "r": 0,
@@ -349,7 +349,7 @@ const LEVELS = [
     "name": "Leicht 9",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 70,
+    "timeLimit": 22,
     "clues": [
       {
         "r": 0,
@@ -388,7 +388,7 @@ const LEVELS = [
     "name": "Leicht 10",
     "size": 4,
     "difficulty": "Leicht",
-    "timeLimit": 75,
+    "timeLimit": 23,
     "clues": [
       {
         "r": 1,
@@ -427,7 +427,7 @@ const LEVELS = [
     "name": "Mittel 1",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 60,
+    "timeLimit": 24,
     "clues": [
       {
         "r": 0,
@@ -466,7 +466,7 @@ const LEVELS = [
     "name": "Mittel 2",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 70,
+    "timeLimit": 25,
     "clues": [
       {
         "r": 0,
@@ -511,7 +511,7 @@ const LEVELS = [
     "name": "Mittel 3",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 80,
+    "timeLimit": 26,
     "clues": [
       {
         "r": 0,
@@ -562,7 +562,7 @@ const LEVELS = [
     "name": "Mittel 4",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 90,
+    "timeLimit": 27,
     "clues": [
       {
         "r": 0,
@@ -613,7 +613,7 @@ const LEVELS = [
     "name": "Mittel 5",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 100,
+    "timeLimit": 28,
     "clues": [
       {
         "r": 1,
@@ -658,7 +658,7 @@ const LEVELS = [
     "name": "Mittel 6",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 110,
+    "timeLimit": 29,
     "clues": [
       {
         "r": 0,
@@ -709,7 +709,7 @@ const LEVELS = [
     "name": "Mittel 7",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 120,
+    "timeLimit": 30,
     "clues": [
       {
         "r": 0,
@@ -754,7 +754,7 @@ const LEVELS = [
     "name": "Mittel 8",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 130,
+    "timeLimit": 31,
     "clues": [
       {
         "r": 0,
@@ -805,7 +805,7 @@ const LEVELS = [
     "name": "Mittel 9",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 140,
+    "timeLimit": 32,
     "clues": [
       {
         "r": 0,
@@ -856,7 +856,7 @@ const LEVELS = [
     "name": "Mittel 10",
     "size": 5,
     "difficulty": "Mittel",
-    "timeLimit": 150,
+    "timeLimit": 32,
     "clues": [
       {
         "r": 2,
@@ -895,7 +895,7 @@ const LEVELS = [
     "name": "Schwer 1",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 90,
+    "timeLimit": 33,
     "clues": [
       {
         "r": 0,
@@ -952,7 +952,7 @@ const LEVELS = [
     "name": "Schwer 2",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 105,
+    "timeLimit": 34,
     "clues": [
       {
         "r": 0,
@@ -1009,7 +1009,7 @@ const LEVELS = [
     "name": "Schwer 3",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 120,
+    "timeLimit": 35,
     "clues": [
       {
         "r": 0,
@@ -1078,7 +1078,7 @@ const LEVELS = [
     "name": "Schwer 4",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 135,
+    "timeLimit": 36,
     "clues": [
       {
         "r": 1,
@@ -1129,7 +1129,7 @@ const LEVELS = [
     "name": "Schwer 5",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 150,
+    "timeLimit": 37,
     "clues": [
       {
         "r": 0,
@@ -1192,7 +1192,7 @@ const LEVELS = [
     "name": "Schwer 6",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 165,
+    "timeLimit": 38,
     "clues": [
       {
         "r": 0,
@@ -1249,7 +1249,7 @@ const LEVELS = [
     "name": "Schwer 7",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 180,
+    "timeLimit": 39,
     "clues": [
       {
         "r": 0,
@@ -1306,7 +1306,7 @@ const LEVELS = [
     "name": "Schwer 8",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 200,
+    "timeLimit": 40,
     "clues": [
       {
         "r": 1,
@@ -1363,7 +1363,7 @@ const LEVELS = [
     "name": "Schwer 9",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 220,
+    "timeLimit": 41,
     "clues": [
       {
         "r": 0,
@@ -1420,7 +1420,7 @@ const LEVELS = [
     "name": "Schwer 10",
     "size": 6,
     "difficulty": "Schwer",
-    "timeLimit": 240,
+    "timeLimit": 42,
     "clues": [
       {
         "r": 1,
@@ -1483,7 +1483,7 @@ const LEVELS = [
     "name": "Experte 1",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 150,
+    "timeLimit": 43,
     "clues": [
       {
         "r": 0,
@@ -1552,7 +1552,7 @@ const LEVELS = [
     "name": "Experte 2",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 175,
+    "timeLimit": 43,
     "clues": [
       {
         "r": 0,
@@ -1627,7 +1627,7 @@ const LEVELS = [
     "name": "Experte 3",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 200,
+    "timeLimit": 44,
     "clues": [
       {
         "r": 1,
@@ -1702,7 +1702,7 @@ const LEVELS = [
     "name": "Experte 4",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 225,
+    "timeLimit": 45,
     "clues": [
       {
         "r": 0,
@@ -1783,7 +1783,7 @@ const LEVELS = [
     "name": "Experte 5",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 250,
+    "timeLimit": 46,
     "clues": [
       {
         "r": 1,
@@ -1864,7 +1864,7 @@ const LEVELS = [
     "name": "Experte 6",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 275,
+    "timeLimit": 47,
     "clues": [
       {
         "r": 0,
@@ -1933,7 +1933,7 @@ const LEVELS = [
     "name": "Experte 7",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 300,
+    "timeLimit": 48,
     "clues": [
       {
         "r": 0,
@@ -2008,7 +2008,7 @@ const LEVELS = [
     "name": "Experte 8",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 330,
+    "timeLimit": 49,
     "clues": [
       {
         "r": 1,
@@ -2089,7 +2089,7 @@ const LEVELS = [
     "name": "Experte 9",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 360,
+    "timeLimit": 50,
     "clues": [
       {
         "r": 0,
@@ -2158,7 +2158,7 @@ const LEVELS = [
     "name": "Experte 10",
     "size": 7,
     "difficulty": "Experte",
-    "timeLimit": 390,
+    "timeLimit": 51,
     "clues": [
       {
         "r": 0,
@@ -2227,7 +2227,7 @@ const LEVELS = [
     "name": "Meister 1",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 240,
+    "timeLimit": 52,
     "clues": [
       {
         "r": 0,
@@ -2308,7 +2308,7 @@ const LEVELS = [
     "name": "Meister 2",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 270,
+    "timeLimit": 53,
     "clues": [
       {
         "r": 0,
@@ -2389,7 +2389,7 @@ const LEVELS = [
     "name": "Meister 3",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 300,
+    "timeLimit": 54,
     "clues": [
       {
         "r": 0,
@@ -2482,7 +2482,7 @@ const LEVELS = [
     "name": "Meister 4",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 330,
+    "timeLimit": 54,
     "clues": [
       {
         "r": 1,
@@ -2575,7 +2575,7 @@ const LEVELS = [
     "name": "Meister 5",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 360,
+    "timeLimit": 55,
     "clues": [
       {
         "r": 0,
@@ -2656,7 +2656,7 @@ const LEVELS = [
     "name": "Meister 6",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 390,
+    "timeLimit": 56,
     "clues": [
       {
         "r": 0,
@@ -2737,7 +2737,7 @@ const LEVELS = [
     "name": "Meister 7",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 420,
+    "timeLimit": 57,
     "clues": [
       {
         "r": 0,
@@ -2824,7 +2824,7 @@ const LEVELS = [
     "name": "Meister 8",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 450,
+    "timeLimit": 58,
     "clues": [
       {
         "r": 1,
@@ -2917,7 +2917,7 @@ const LEVELS = [
     "name": "Meister 9",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 480,
+    "timeLimit": 59,
     "clues": [
       {
         "r": 0,
@@ -2998,7 +2998,7 @@ const LEVELS = [
     "name": "Meister 10",
     "size": 8,
     "difficulty": "Meister",
-    "timeLimit": 510,
+    "timeLimit": 60,
     "clues": [
       {
         "r": 3,
@@ -3237,8 +3237,20 @@ function showGame(idx) {
   gameScreen.classList.add('active');
   requestAnimationFrame(() => requestAnimationFrame(() => {
     resize();
-    startTimer();
+    showStartOverlay(timeRemaining, startTimer);
   }));
+}
+
+function showStartOverlay(seconds, callback) {
+  var overlay = document.getElementById('start-overlay');
+  var label   = document.getElementById('start-overlay-time');
+  if (!overlay || !label) { callback(); return; }
+  label.textContent = seconds + 's';
+  overlay.classList.add('visible');
+  setTimeout(function() {
+    overlay.classList.remove('visible');
+    setTimeout(callback, 250);
+  }, 1800);
 }
 
 
