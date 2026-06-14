@@ -3093,6 +3093,18 @@ const PALETTE = [
 // ── Persistence ───────────────────────────────────────────────────────────
 const STORAGE_KEY = 'patches_v1';
 
+// ── Dark Mode ─────────────────────────────────────────────────────────────
+function loadTheme() {
+  if (localStorage.getItem('patches_dark') === '1') document.body.classList.add('dark');
+}
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('patches_dark', isDark ? '1' : '0');
+  const btn = document.getElementById('btn-theme');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
+loadTheme();
+
 function loadProgress() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -3239,6 +3251,22 @@ function findNextLevel() {
   return -1;
 }
 
+function updateLevelGrid() {
+  const grid = document.getElementById('level-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const currentIdx = findCurrentLevel();
+  shuffledOrder.forEach(function(idx) {
+    const dot = document.createElement('div');
+    const levelId = LEVELS[idx].id;
+    const isSolved = solved.includes(levelId);
+    const starCount = stars[levelId] || 0;
+    const isCurrent = !isSolved && idx === currentIdx;
+    dot.className = 'lvl-dot' + (isSolved ? ' lvl-s' + starCount : '') + (isCurrent ? ' lvl-cur' : '');
+    grid.appendChild(dot);
+  });
+}
+
 function showMenu() {
   stopTimer();
   isDailyChallenge = false;
@@ -3265,6 +3293,7 @@ function showMenu() {
     starsEl.textContent = total > 0 ? '⭐ ' + total + ' / ' + (LEVELS.length * 3) + ' Sterne' : '';
   }
   updateDailyCard();
+  updateLevelGrid();
 }
 
 function showGame(idx) {
@@ -3697,6 +3726,8 @@ function placeRect() {
   rectangles.push({ r0, c0, r1, c1, colorIdx });
   playPop();
   haptic('medium');
+  const bw = document.getElementById('board-wrap');
+  if (bw) { bw.classList.remove('placing'); void bw.offsetWidth; bw.classList.add('placing'); }
 }
 
 function overlaps(rect, r0, c0, r1, c1) {
@@ -3867,4 +3898,11 @@ if ('serviceWorker' in navigator) {
 loadProgress();
 initShuffledOrder();
 checkForUpdate();
+
+const btnTheme = document.getElementById('btn-theme');
+if (btnTheme) {
+  btnTheme.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  btnTheme.addEventListener('click', toggleTheme);
+}
+
 showMenu();
