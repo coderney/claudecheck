@@ -1,5 +1,11 @@
 'use strict';
 
+window.onerror = function(msg, src, line, col, err) {
+  document.body.style.cssText = 'background:#fff;margin:0;padding:20px;font-family:monospace';
+  document.body.innerHTML = '<h3 style="color:red">JS Error</h3><p>' + msg + '</p><p>Line ' + line + '</p><pre style="font-size:11px;white-space:pre-wrap">' + (err && err.stack ? err.stack : '') + '</pre>';
+  return true;
+};
+
 // Bump this string on every deployment — drives the update indicator on the menu.
 const GAME_VERSION = '20260614-4';
 
