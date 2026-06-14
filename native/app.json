@@ -2,6 +2,7 @@
   "expo": {
     "name": "Patches",
     "slug": "patches-app",
+    "owner": "cosmohorst",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "patches",
