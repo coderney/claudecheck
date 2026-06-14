@@ -3679,9 +3679,13 @@ document.getElementById('btn-hard-reset').addEventListener('click', async () => 
     }
   } catch (_) {}
 
-  // Append timestamp so iOS fetches a fresh copy instead of using disk cache
-  const base = window.location.href.replace(/\?.*$/, '');
-  window.location.replace(base + '?r=' + Date.now());
+  if (window.ReactNativeWebView) {
+    window.ReactNativeWebView.postMessage('reset');
+  } else {
+    // Web: append timestamp so iOS fetches a fresh copy instead of using disk cache
+    const base = window.location.href.replace(/\?.*$/, '');
+    window.location.replace(base + '?r=' + Date.now());
+  }
 });
 
 // ── Boot ──────────────────────────────────────────────────────────────────
