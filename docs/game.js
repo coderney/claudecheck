@@ -3622,11 +3622,15 @@ function checkWin() {
 document.getElementById('btn-back').addEventListener('click', showMenu);
 document.getElementById('btn-continue').addEventListener('click', () => showGame(findCurrentLevel()));
 
-document.getElementById('btn-instructions').addEventListener('click', () => {
-  document.getElementById('instructions-overlay').classList.add('visible');
+const btnInstr = document.getElementById('btn-instructions');
+if (btnInstr) btnInstr.addEventListener('click', () => {
+  const ov = document.getElementById('instructions-overlay');
+  if (ov) ov.classList.add('visible');
 });
-document.getElementById('btn-instructions-close').addEventListener('click', () => {
-  document.getElementById('instructions-overlay').classList.remove('visible');
+const btnInstrClose = document.getElementById('btn-instructions-close');
+if (btnInstrClose) btnInstrClose.addEventListener('click', () => {
+  const ov = document.getElementById('instructions-overlay');
+  if (ov) ov.classList.remove('visible');
 });
 
 document.getElementById('btn-reset').addEventListener('click', () => {
