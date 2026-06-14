@@ -76,24 +76,44 @@ html, body {
 #menu {
   background: var(--primary-50);
   padding: env(safe-area-inset-top, var(--sp-4)) var(--sp-4) env(safe-area-inset-bottom, var(--sp-4));
-  gap: var(--sp-1);
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-5);
 }
 
-.menu-header { padding: var(--sp-4) 0 var(--sp-2); }
-.menu-header h1 {
+.menu-logo {
   font-family: var(--font-heading);
-  font-size: 1.953rem;
+  font-size: clamp(3.5rem, 20vw, 6rem);
   font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 2rem;
-  color: var(--primary-800);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  user-select: none;
 }
-.menu-header p {
-  font-family: var(--font-body);
-  font-size: 0.800rem;
-  color: var(--neutral-500);
-  margin-top: var(--sp-0);
+
+.menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  width: 100%;
+  max-width: 320px;
 }
+
+.btn-continue {
+  background: var(--primary-600);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3) var(--sp-5);
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: filter 0.15s;
+  width: 100%;
+}
+.btn-continue:active { filter: brightness(0.9); }
 
 .level-list {
   flex: 1;

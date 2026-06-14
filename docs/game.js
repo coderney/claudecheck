@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260614-1';
+const GAME_VERSION = '20260614-2';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -3201,12 +3201,26 @@ function onTimeout() {
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────
+function findCurrentLevel() {
+  for (let i = 0; i < LEVELS.length; i++) {
+    if (!solved.includes(LEVELS[i].id)) return i;
+  }
+  return 0; // all solved → restart from beginning
+}
+
 function showMenu() {
   stopTimer();
   menuScreen.classList.add('active');
   gameScreen.classList.remove('active');
   currentLevelIndex = -1;
-  renderMenu();
+  const btn = document.getElementById('btn-continue');
+  if (solved.length === 0) {
+    btn.textContent = 'Spiel starten';
+  } else if (solved.length >= LEVELS.length) {
+    btn.textContent = 'Nochmal spielen';
+  } else {
+    btn.textContent = 'Spiel fortsetzen';
+  }
 }
 
 function showGame(idx) {
@@ -3216,7 +3230,7 @@ function showGame(idx) {
   winBanner.classList.remove('visible');
   timeoutBanner.classList.remove('visible');
   timerEl.classList.remove('stopped', 'urgent');
-  titleEl.textContent = LEVELS[idx].name;
+  titleEl.textContent = 'Level ' + (idx + 1);
   timeRemaining = LEVELS[idx].timeLimit;
   updateTimerDisplay();
   menuScreen.classList.remove('active');
@@ -3227,41 +3241,6 @@ function showGame(idx) {
   }));
 }
 
-function renderMenu() {
-  const list = document.getElementById('level-list');
-  list.innerHTML = '';
-  LEVELS.forEach((lvl, i) => {
-    const unlocked = isUnlocked(i);
-    const isSolved = solved.includes(lvl.id);
-    const card = document.createElement('div');
-    card.className = 'level-card' +
-      (isSolved  ? ' solved'  : '') +
-      (!unlocked ? ' locked' : '');
-
-    const timeStr = formatTime(lvl.timeLimit);
-
-    let badgeHtml;
-    if (isSolved) {
-      badgeHtml = `<div class="level-check">
-        <svg viewBox="0 0 16 16"><polyline points="3,8 7,12 13,4"/></svg>
-      </div>`;
-    } else if (!unlocked) {
-      badgeHtml = `<div class="level-lock">🔒</div>`;
-    } else {
-      badgeHtml = `<span class="level-time">${timeStr}</span>`;
-    }
-
-    card.innerHTML = `
-      <div class="level-card-left">
-        <span class="level-name">${lvl.name}</span>
-        <span class="level-meta">${lvl.size}×${lvl.size} · ${lvl.difficulty}</span>
-      </div>
-      <div class="level-badge">${badgeHtml}</div>`;
-
-    if (unlocked) card.addEventListener('click', () => showGame(i));
-    list.appendChild(card);
-  });
-}
 
 // ── Sizing ────────────────────────────────────────────────────────────────
 function resize() {
@@ -3594,6 +3573,7 @@ function checkWin() {
 
 // ── Buttons ───────────────────────────────────────────────────────────────
 document.getElementById('btn-back').addEventListener('click', showMenu);
+document.getElementById('btn-continue').addEventListener('click', () => showGame(findCurrentLevel()));
 
 document.getElementById('btn-reset').addEventListener('click', () => {
   rectangles = [];
