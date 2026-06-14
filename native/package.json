@@ -4,20 +4,19 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "ios": "expo run:ios"
+    "ios": "expo start --ios"
   },
   "dependencies": {
-    "expo": "~54.0.0",
-    "expo-status-bar": "~2.2.0",
-    "expo-splash-screen": "*",
-    "react": "18.3.1",
-    "react-native": "0.76.9",
-    "react-native-webview": "*",
-    "react-native-safe-area-context": "*"
+    "expo": "~54.0.34",
+    "expo-status-bar": "~3.0.9",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-webview": "13.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "typescript": "^5.3.3",
-    "@types/react": "~18.3.0"
+    "typescript": "~5.9.2",
+    "@types/react": "~19.1.0"
   }
 }
