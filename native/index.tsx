@@ -20,15 +20,6 @@ function App() {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         allowsBackForwardNavigationGestures={false}
-        onShouldStartLoadWithRequest={(request) => {
-          return (
-            request.url === 'about:blank' ||
-            request.url.startsWith('https://localhost') ||
-            request.url.startsWith('blob:') ||
-            request.url.startsWith('https://fonts.googleapis.com') ||
-            request.url.startsWith('https://fonts.gstatic.com')
-          );
-        }}
       />
     </View>
   );
