@@ -3108,14 +3108,20 @@ const STORAGE_KEY = 'patches_v1';
 
 // ── Dark Mode ─────────────────────────────────────────────────────────────
 function loadTheme() {
-  if (localStorage.getItem('patches_dark') === '1') document.body.classList.add('dark');
+  try {
+    if (localStorage.getItem('patches_dark') === '1') document.body.classList.add('dark');
+    __log('2a: localStorage ok');
+  } catch (e) { __log('2a: localStorage THREW: ' + e.message); }
 }
 function toggleTheme() {
-  const isDark = document.body.classList.toggle('dark');
-  localStorage.setItem('patches_dark', isDark ? '1' : '0');
-  const btn = document.getElementById('btn-theme');
-  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  try {
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('patches_dark', isDark ? '1' : '0');
+    const btn = document.getElementById('btn-theme');
+    if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  } catch (_) {}
 }
+__log('1.5: before loadTheme');
 loadTheme();
 __log('2: loadTheme done');
 
