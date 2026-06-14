@@ -14,7 +14,7 @@ function App() {
       <StatusBar style="dark" hidden />
       <WebView
         key={key}
-        source={{ html: getGameHtml() }}
+        source={{ html: getGameHtml(), baseUrl: 'http://localhost' }}
         style={styles.webview}
         javaScriptEnabled={true}
         domStorageEnabled={true}

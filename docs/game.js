@@ -1,17 +1,5 @@
 'use strict';
 
-var __dbg = document.createElement('div');
-__dbg.style.cssText = 'position:fixed;top:0;left:0;right:0;background:rgba(255,255,0,0.9);color:#000;padding:8px;font-size:12px;font-family:monospace;z-index:99999;white-space:pre-wrap;max-height:50vh;overflow:auto';
-document.body.appendChild(__dbg);
-function __log(s) { __dbg.textContent += s + '\n'; }
-window.onerror = function(msg, src, line, col, err) {
-  __dbg.style.background = 'rgba(255,0,0,0.9)';
-  __dbg.style.color = '#fff';
-  __log('ERROR: ' + msg + ' (line ' + line + ')');
-  if (err && err.stack) __log(err.stack.slice(0, 300));
-  return true;
-};
-__log('1: onerror set');
 
 // Bump this string on every deployment — drives the update indicator on the menu.
 const GAME_VERSION = '20260614-4';
@@ -3110,8 +3098,7 @@ const STORAGE_KEY = 'patches_v1';
 function loadTheme() {
   try {
     if (localStorage.getItem('patches_dark') === '1') document.body.classList.add('dark');
-    __log('2a: localStorage ok');
-  } catch (e) { __log('2a: localStorage THREW: ' + e.message); }
+  } catch (_) {}
 }
 function toggleTheme() {
   try {
@@ -3121,9 +3108,7 @@ function toggleTheme() {
     if (btn) btn.textContent = isDark ? '☀️' : '🌙';
   } catch (_) {}
 }
-__log('1.5: before loadTheme');
 loadTheme();
-__log('2: loadTheme done');
 
 function loadProgress() {
   try {
@@ -3187,13 +3172,10 @@ let stars          = {};
 let isDailyChallenge = false;
 
 // ── DOM ───────────────────────────────────────────────────────────────────
-__log('3: DOM assign start');
 const menuScreen    = document.getElementById('menu');
 const gameScreen    = document.getElementById('game');
 const canvas        = document.getElementById('canvas');
-__log('4: canvas=' + (canvas ? 'ok' : 'NULL'));
 const ctx           = canvas.getContext('2d');
-__log('5: ctx ok');
 const titleEl       = document.getElementById('game-title');
 const timerEl       = document.getElementById('timer');
 const winBanner     = document.getElementById('win-banner');
@@ -3918,11 +3900,8 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 
-__log('6: boot start');
 loadProgress();
-__log('7: loadProgress done');
 initShuffledOrder();
-__log('8: initShuffledOrder done');
 checkForUpdate();
 
 const btnTheme = document.getElementById('btn-theme');
@@ -3930,6 +3909,4 @@ if (btnTheme) {
   btnTheme.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
   btnTheme.addEventListener('click', toggleTheme);
 }
-__log('9: pre-showMenu');
 showMenu();
-__log('10: showMenu done');
