@@ -26,6 +26,7 @@
     <p id="menu-level-hint" class="menu-level-hint">Du bist in Level 1</p>
     <div class="menu-actions">
       <button id="btn-continue" class="btn-continue">Spiel starten</button>
+      <button id="btn-instructions" class="btn-instructions">Anleitung</button>
       <button id="btn-hard-reset" class="btn-hard-reset">↺ Zurücksetzen</button>
     </div>
   </div>
@@ -80,6 +81,24 @@
       .then(function(d) { return d ? d.version : null; })
       .catch(function() { return null; });
   </script>
+  <!-- Instructions Overlay -->
+  <div id="instructions-overlay" class="instructions-overlay">
+    <div class="instructions-card">
+      <h2 class="instructions-title">Wie funktioniert Patches?</h2>
+      <div class="instructions-body">
+        <p>Deine Aufgabe: Teile das gesamte Gitter lückenlos in Rechtecke auf.</p>
+        <ul class="instructions-rules">
+          <li><span class="rule-icon">🔢</span><span>Jedes Rechteck enthält genau <strong>eine Zahl</strong>.</span></li>
+          <li><span class="rule-icon">📐</span><span>Die Zahl gibt an, wie viele Felder das Rechteck umfassen muss.</span></li>
+          <li><span class="rule-icon">✏️</span><span>Zeichne ein Rechteck, indem du <strong>über die Felder ziehst</strong>.</span></li>
+          <li><span class="rule-icon">✅</span><span>Gelöst, wenn alle Felder lückenlos abgedeckt sind.</span></li>
+        </ul>
+        <p class="instructions-example">Beispiel: Eine <strong>6</strong> bedeutet, das Rechteck muss genau 6 Felder groß sein — z.&nbsp;B. 1×6, 2×3 oder 6×1.</p>
+      </div>
+      <button id="btn-instructions-close" class="btn-instructions-close">Verstanden</button>
+    </div>
+  </div>
+
   <!-- Confirmation Dialog -->
   <div id="confirm-overlay" class="confirm-overlay">
     <div class="confirm-card">

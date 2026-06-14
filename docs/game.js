@@ -3622,6 +3622,13 @@ function checkWin() {
 document.getElementById('btn-back').addEventListener('click', showMenu);
 document.getElementById('btn-continue').addEventListener('click', () => showGame(findCurrentLevel()));
 
+document.getElementById('btn-instructions').addEventListener('click', () => {
+  document.getElementById('instructions-overlay').classList.add('visible');
+});
+document.getElementById('btn-instructions-close').addEventListener('click', () => {
+  document.getElementById('instructions-overlay').classList.remove('visible');
+});
+
 document.getElementById('btn-reset').addEventListener('click', () => {
   rectangles = [];
   timeExtended = false;
