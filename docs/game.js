@@ -3349,8 +3349,14 @@ function initShuffledOrder() {
 }
 
 function findCurrentLevel() {
+  // Check handmade levels first (shuffledOrder)
   for (const idx of shuffledOrder) {
     if (!solved.includes(idx)) return idx;
+  }
+  // All handmade levels solved — check generated pages
+  var total = getTotalUnlockedLevels();
+  for (var pos = 50; pos < total; pos++) {
+    if (!solved.includes(pos)) return pos;
   }
   // All handmade levels solved — check generated pages
   var total = getTotalUnlockedLevels();
@@ -3492,7 +3498,7 @@ function showReplayDialog(idx) {
   const levelId = lv.id;
   const starCount = stars[levelId] || 0;
   const bestTime = bestTimes[levelId];
-  const pos = shuffledOrder.indexOf(idx) + 1;
+  const pos = idx < 50 ? shuffledOrder.indexOf(idx) + 1 : idx + 1;
   const titleEl2 = document.getElementById('replay-title');
   const starsEl2 = document.getElementById('replay-stars');
   const timeEl2  = document.getElementById('replay-time');

@@ -442,13 +442,49 @@ html, body {
 }
 
 /* ── Level Progress Grid ── */
+.level-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+}
+.level-nav-btn {
+  background: none; border: none;
+  font-size: 1.1rem; cursor: pointer;
+  color: var(--primary-500);
+  padding: 4px 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.level-nav-btn.visible { opacity: 1; pointer-events: auto; }
+.level-grid-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 320px;
+}
 .level-grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 5px;
   width: 100%;
-  max-width: 320px;
 }
+.level-page-indicator {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+.page-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--neutral-300);
+  transition: background 0.2s;
+}
+.page-dot.active { background: var(--primary-500); }
 .lvl-dot {
   aspect-ratio: 1;
   border-radius: 50%;
@@ -618,6 +654,9 @@ body.dark .btn-instructions { background: #1e293b; border-color: #334155; color:
 body.dark .btn-instructions:active { background: #0f172a; }
 body.dark .btn-hard-reset   { color: #475569; border-color: #334155; }
 body.dark .win-star.empty   { color: #334155; }
+body.dark .level-nav-btn   { color: var(--primary-400); }
+body.dark .page-dot        { background: #334155; }
+body.dark .page-dot.active { background: var(--primary-400); }
 
 /* ════════════════════════════════════════
    GAME
