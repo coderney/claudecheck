@@ -2,7 +2,7 @@
 
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260614-4';
+const GAME_VERSION = '20260615-1';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -3117,9 +3117,10 @@ function loadProgress() {
       const data = JSON.parse(raw);
       solved        = Array.isArray(data.solved)        ? data.solved        : [];
       shuffledOrder = Array.isArray(data.shuffledOrder) ? data.shuffledOrder : [];
-      stars         = (data.stars && typeof data.stars === 'object') ? data.stars : {};
+      stars         = (data.stars     && typeof data.stars     === 'object') ? data.stars     : {};
+      bestTimes     = (data.bestTimes && typeof data.bestTimes === 'object') ? data.bestTimes : {};
     }
-  } catch (_) { solved = []; shuffledOrder = []; stars = {}; }
+  } catch (_) { solved = []; shuffledOrder = []; stars = {}; bestTimes = {}; }
 }
 
 async function checkForUpdate() {
@@ -3141,7 +3142,7 @@ async function checkForUpdate() {
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, shuffledOrder, stars }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, shuffledOrder, stars, bestTimes }));
   } catch (_) {}
 }
 
@@ -3169,6 +3170,8 @@ let timeRemaining  = 0;
 let timerRunning   = false;
 let timeExtended   = false;
 let stars          = {};
+let bestTimes      = {};
+let replayTargetIdx = -1;
 let isDailyChallenge = false;
 
 // ── DOM ───────────────────────────────────────────────────────────────────
@@ -3268,8 +3271,41 @@ function updateLevelGrid() {
     const starCount = stars[levelId] || 0;
     const isCurrent = !isSolved && idx === currentIdx;
     dot.className = 'lvl-dot' + (isSolved ? ' lvl-s' + starCount : '') + (isCurrent ? ' lvl-cur' : '');
+    if (isSolved && starCount > 0) dot.textContent = String(starCount);
+    if (isSolved) {
+      dot.addEventListener('click', function() { showReplayDialog(idx); });
+    }
     grid.appendChild(dot);
   });
+}
+
+function showReplayDialog(idx) {
+  const levelId = LEVELS[idx].id;
+  const starCount = stars[levelId] || 0;
+  const bestTime = bestTimes[levelId];
+  const pos = shuffledOrder.indexOf(idx) + 1;
+  const titleEl2 = document.getElementById('replay-title');
+  const starsEl2 = document.getElementById('replay-stars');
+  const timeEl2  = document.getElementById('replay-time');
+  const ov       = document.getElementById('replay-overlay');
+  if (titleEl2) titleEl2.textContent = 'Level ' + pos + ' – ' + LEVELS[idx].name;
+  if (starsEl2) {
+    var filled = '';
+    for (var i = 0; i < starCount; i++) filled += '⭐';
+    for (var j = starCount; j < 3; j++) filled += '☆';
+    starsEl2.textContent = filled;
+  }
+  if (timeEl2) {
+    if (bestTime != null) {
+      const m = Math.floor(bestTime / 60);
+      const s = bestTime % 60;
+      timeEl2.textContent = 'Bestzeit: ' + m + ':' + (s < 10 ? '0' : '') + s;
+    } else {
+      timeEl2.textContent = '';
+    }
+  }
+  replayTargetIdx = idx;
+  if (ov) ov.classList.add('visible');
 }
 
 function showMenu() {
@@ -3731,8 +3767,16 @@ function placeRect() {
   rectangles.push({ r0, c0, r1, c1, colorIdx });
   playPop();
   haptic('medium');
-  const bw = document.getElementById('board-wrap');
-  if (bw) { bw.classList.remove('placing'); void bw.offsetWidth; bw.classList.add('placing'); }
+  if (boardEl && CELL > 0) {
+    const flash = document.createElement('div');
+    flash.className = 'rect-flash';
+    flash.style.left   = (c0 * CELL) + 'px';
+    flash.style.top    = (r0 * CELL) + 'px';
+    flash.style.width  = ((c1 - c0 + 1) * CELL) + 'px';
+    flash.style.height = ((r1 - r0 + 1) * CELL) + 'px';
+    boardEl.appendChild(flash);
+    flash.addEventListener('animationend', function() { flash.remove(); });
+  }
 }
 
 function overlaps(rect, r0, c0, r1, c1) {
@@ -3778,14 +3822,17 @@ function checkWin() {
     winMsg.textContent = 'Heute geschafft!';
     btnNext.textContent = 'Zurück zum Menü';
   } else {
+    const elapsed = LEVELS[currentLevelIndex].timeLimit - timeRemaining;
     if (!solved.includes(level.id)) {
-      const elapsed = LEVELS[currentLevelIndex].timeLimit - timeRemaining;
-      const ratio   = elapsed / LEVELS[currentLevelIndex].timeLimit;
-      const earned  = timeExtended ? 1 : ratio <= 0.5 ? 3 : ratio <= 0.9 ? 2 : 1;
+      const ratio  = elapsed / LEVELS[currentLevelIndex].timeLimit;
+      const earned = timeExtended ? 1 : ratio <= 0.5 ? 3 : ratio <= 0.9 ? 2 : 1;
       if ((stars[level.id] || 0) < earned) stars[level.id] = earned;
       solved.push(level.id);
-      saveProgress();
     }
+    if (!timeExtended && (bestTimes[level.id] == null || elapsed < bestTimes[level.id])) {
+      bestTimes[level.id] = elapsed;
+    }
+    saveProgress();
     showWinStars(stars[level.id] || 0);
     const nextIdx = findNextLevel();
     winMsg.textContent = nextIdx >= 0 ? 'Weiter zum nächsten Rätsel?' : 'Alle Rätsel gelöst! 🎉';
@@ -3855,6 +3902,18 @@ document.getElementById('btn-retry').addEventListener('click', () => {
 });
 
 window.addEventListener('resize', () => { if (currentLevelIndex >= 0) resize(); });
+
+// ── Replay Dialog ─────────────────────────────────────────────────────────
+(function() {
+  var ov = document.getElementById('replay-overlay');
+  var btnNo  = document.getElementById('btn-replay-no');
+  var btnYes = document.getElementById('btn-replay-yes');
+  if (btnNo)  btnNo.addEventListener('click',  function() { if (ov) ov.classList.remove('visible'); });
+  if (btnYes) btnYes.addEventListener('click', function() {
+    if (ov) ov.classList.remove('visible');
+    if (replayTargetIdx >= 0) showGame(replayTargetIdx);
+  });
+})();
 
 // ── Hard Reset ────────────────────────────────────────────────────────────
 async function doHardReset() {
