@@ -2,7 +2,7 @@
 
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260615-6';
+const GAME_VERSION = '20260615-7';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -3840,49 +3840,59 @@ function draw() {
 }
 
 // Orientation indicator behind the clue number.
-// null → nothing | 'h' → wide horizontal pill | 'v' → tall vertical pill | 's' → circle
+// 's' → inset square border | 'h' → bars at left+right edge | 'v' → bars at top+bottom | null → corner '?'
 function drawClueIndicator(clue) {
-  if (!clue.hint) return;
-
-  const cx = clue.c * CELL + CELL / 2;
-  const cy = clue.r * CELL + CELL / 2;
-  const pad = Math.max(2, Math.round(CELL * 0.06));
-  const maxDim = CELL - pad * 2;
+  const x0 = clue.c * CELL;
+  const y0 = clue.r * CELL;
+  const cx = x0 + CELL / 2;
+  const cy = y0 + CELL / 2;
 
   ctx.save();
-  ctx.beginPath();
-  ctx.rect(clue.c * CELL + pad, clue.r * CELL + pad, maxDim, maxDim);
-  ctx.clip();
 
-  ctx.fillStyle   = 'rgba(9,146,169,0.13)';
-  ctx.strokeStyle = 'rgba(9,146,169,0.52)';
-  ctx.lineWidth   = Math.max(1.5, CELL * 0.055);
-  ctx.lineCap     = 'round';
-  ctx.lineJoin    = 'round';
+  const teal   = 'rgba(9,146,169,0.52)';
+  const bThick = Math.max(2.5, CELL * 0.07);
+  const bLen   = Math.max(6,   CELL * 0.42);
+  const ePad   = Math.max(3,   CELL * 0.08);
+  const br     = bThick / 2;
+
+  ctx.fillStyle   = teal;
+  ctx.strokeStyle = teal;
 
   if (clue.hint === 'h') {
-    // Very flat wide pill: height ~24% of cell, width fills ~90%
-    const ph = Math.max(4, maxDim * 0.24);
-    const pw = Math.min(maxDim * 0.90, ph * 4.0);
+    // Two vertical bars at left and right edges, centered vertically
     ctx.beginPath();
-    ctx.roundRect(cx - pw / 2, cy - ph / 2, pw, ph, ph / 2);
+    ctx.roundRect(x0 + ePad, cy - bLen / 2, bThick, bLen, br);
+    ctx.roundRect(x0 + CELL - ePad - bThick, cy - bLen / 2, bThick, bLen, br);
     ctx.fill();
-    ctx.stroke();
+
   } else if (clue.hint === 'v') {
-    // Very narrow tall pill: width ~24% of cell, height fills ~90%
-    const pw = Math.max(4, maxDim * 0.24);
-    const ph = Math.min(maxDim * 0.90, pw * 4.0);
+    // Two horizontal bars at top and bottom edges, centered horizontally
     ctx.beginPath();
-    ctx.roundRect(cx - pw / 2, cy - ph / 2, pw, ph, pw / 2);
+    ctx.roundRect(cx - bLen / 2, y0 + ePad, bLen, bThick, br);
+    ctx.roundRect(cx - bLen / 2, y0 + CELL - ePad - bThick, bLen, bThick, br);
     ctx.fill();
+
+  } else if (clue.hint === 's') {
+    // Inset square border — all four sides present, clearly square
+    const lw = bThick;
+    ctx.lineWidth = lw;
+    ctx.beginPath();
+    ctx.roundRect(x0 + ePad + lw / 2, y0 + ePad + lw / 2,
+                  CELL - ePad * 2 - lw, CELL - ePad * 2 - lw,
+                  Math.max(2, ePad * 0.5));
     ctx.stroke();
+
   } else {
-    // Perfect circle — clearly round, unmistakably symmetric
-    const r = Math.min(maxDim * 0.38, Math.max(5, CELL * 0.25));
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
+    // null: small '?' at all four corners
+    const fs = Math.max(7, Math.round(CELL * 0.18));
+    ctx.font = `700 ${fs}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const off = ePad + fs * 0.55;
+    ctx.fillText('?', x0 + off, y0 + off);
+    ctx.fillText('?', x0 + CELL - off, y0 + off);
+    ctx.fillText('?', x0 + off, y0 + CELL - off);
+    ctx.fillText('?', x0 + CELL - off, y0 + CELL - off);
   }
 
   ctx.restore();
