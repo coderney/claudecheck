@@ -3826,7 +3826,7 @@ function checkWin() {
     if (!solved.includes(level.id)) {
       const ratio  = elapsed / LEVELS[currentLevelIndex].timeLimit;
       const earned = timeExtended ? 1 : ratio <= 0.5 ? 3 : ratio <= 0.9 ? 2 : 1;
-      if ((stars[level.id] || 0) < earned) stars[level.id] = earned;
+      stars[level.id] = earned;
       solved.push(level.id);
     }
     if (!timeExtended && (bestTimes[level.id] == null || elapsed < bestTimes[level.id])) {
