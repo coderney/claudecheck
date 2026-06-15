@@ -3497,7 +3497,7 @@ function showReplayDialog(idx) {
   const starsEl2 = document.getElementById('replay-stars');
   const timeEl2  = document.getElementById('replay-time');
   const ov       = document.getElementById('replay-overlay');
-  if (titleEl2) titleEl2.textContent = 'Level ' + pos + ' – ' + LEVELS[idx].name;
+  if (titleEl2) titleEl2.textContent = 'Level ' + pos + ' – ' + lv.name;
   if (starsEl2) {
     var filled = '';
     for (var i = 0; i < starCount; i++) filled += '⭐';
