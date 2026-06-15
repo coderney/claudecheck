@@ -2,7 +2,7 @@
 
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260615-2';
+const GAME_VERSION = '20260615-3';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -3239,67 +3239,118 @@ function seededRand(seed) {
   };
 }
 
-function generateLevel(pos) {
-  var seed = (pos * 2654435761) | 0;
+// Checks if a generated level has exactly N solutions (stops after maxSolutions found).
+// Returns the count found (0, 1, or 2).
+function countSolutions(level, maxSolutions) {
+  var n = level.size;
+  var clues = level.clues;
+  var clueAt = new Int16Array(n * n).fill(-1);
+  for (var i = 0; i < clues.length; i++) clueAt[clues[i].r * n + clues[i].c] = i;
+  var coverage = new Uint8Array(n * n);
+  var found = 0;
+  var iters = 0;
+
+  function solve(ci) {
+    if (found >= maxSolutions || ++iters > 60000) return;
+    if (ci === clues.length) {
+      for (var k = 0; k < n * n; k++) if (coverage[k] !== 1) return;
+      found++;
+      return;
+    }
+    var clue = clues[ci];
+    var area = clue.v;
+    for (var rows = 1; rows <= area && rows <= n; rows++) {
+      if (area % rows !== 0) continue;
+      var cols = area / rows;
+      if (cols > n) continue;
+      if (area > 1 && clue.hint !== null) {
+        if (clue.hint === 'h' && cols <= rows) continue;
+        if (clue.hint === 'v' && rows <= cols) continue;
+        if (clue.hint === 's' && rows !== cols) continue;
+      }
+      for (var r0 = Math.max(0, clue.r - rows + 1); r0 <= Math.min(n - rows, clue.r); r0++) {
+        var r1 = r0 + rows - 1;
+        for (var c0 = Math.max(0, clue.c - cols + 1); c0 <= Math.min(n - cols, clue.c); c0++) {
+          var c1 = c0 + cols - 1;
+          var ok = true;
+          for (var r = r0; r <= r1 && ok; r++)
+            for (var c = c0; c <= c1 && ok; c++) {
+              var cell = r * n + c;
+              if (coverage[cell]) ok = false;
+              else if (clueAt[cell] !== -1 && clueAt[cell] !== ci) ok = false;
+            }
+          if (!ok) continue;
+          for (var r = r0; r <= r1; r++) for (var c = c0; c <= c1; c++) coverage[r * n + c] = 1;
+          solve(ci + 1);
+          for (var r = r0; r <= r1; r++) for (var c = c0; c <= c1; c++) coverage[r * n + c] = 0;
+          if (found >= maxSolutions || iters > 60000) return;
+        }
+      }
+    }
+  }
+
+  solve(0);
+  return found;
+}
+
+function buildLevelAttempt(pos, attempt) {
+  var seed = ((pos * 2654435761) + attempt * 1000003) | 0;
   var rand = seededRand(seed);
   var sizeOptions = [4,5,5,6,6,6,7,7,8,8];
   var n = sizeOptions[Math.floor(rand() * sizeOptions.length)];
 
-  // Partition grid top-left to bottom-right
   var grid = [];
-  for (var i = 0; i < n; i++) { grid.push(new Array(n).fill(-1)); }
+  for (var i = 0; i < n; i++) grid.push(new Array(n).fill(-1));
   var rects = [];
 
   for (var r = 0; r < n; r++) {
     for (var c = 0; c < n; c++) {
       if (grid[r][c] !== -1) continue;
-      // maxW: cells free to the right
       var maxW = 0;
       while (c + maxW < n && grid[r][c + maxW] === -1) maxW++;
       var w = 1 + Math.floor(rand() * Math.min(maxW, 4));
-      // maxH: rows where entire width w is free
       var maxH = 0;
       while (r + maxH < n) {
-        var ok = true;
-        for (var cc = c; cc < c + w; cc++) {
-          if (grid[r + maxH][cc] !== -1) { ok = false; break; }
-        }
-        if (!ok) break;
+        var rowOk = true;
+        for (var cc = c; cc < c + w; cc++) if (grid[r + maxH][cc] !== -1) { rowOk = false; break; }
+        if (!rowOk) break;
         maxH++;
       }
       var h = 1 + Math.floor(rand() * Math.min(maxH, 4));
       var rectId = rects.length;
-      for (var rr = r; rr < r + h; rr++) {
-        for (var cc2 = c; cc2 < c + w; cc2++) {
+      for (var rr = r; rr < r + h; rr++)
+        for (var cc2 = c; cc2 < c + w; cc2++)
           grid[rr][cc2] = rectId;
-        }
-      }
       rects.push({ r: r, c: c, w: w, h: h });
     }
   }
 
-  // Build clues
-  var hintOptions = ['h', 'v', 's', null];
+  // Derive hints from the actual rectangle shape — never assign randomly
   var clues = rects.map(function(rect) {
     var area = rect.w * rect.h;
     var cr = rect.r + Math.floor(rand() * rect.h);
     var cc3 = rect.c + Math.floor(rand() * rect.w);
-    var hint = area === 1 ? 's' : hintOptions[Math.floor(rand() * hintOptions.length)];
+    var hint = null;
+    if (area > 1) {
+      if (rect.w > rect.h) hint = 'h';
+      else if (rect.h > rect.w) hint = 'v';
+      else hint = 's';
+    }
     return { r: cr, c: cc3, v: area, hint: hint };
   });
 
   var difficulty = n <= 5 ? 'Leicht' : n === 6 ? 'Mittel' : n === 7 ? 'Schwer' : 'Experte';
   var timeLimit = Math.max(15, Math.round(n * n * 0.7 + rects.length * 1.2));
+  return { id: pos, name: difficulty + ' ' + (pos - 49), size: n, difficulty: difficulty, timeLimit: timeLimit, clues: clues, _generated: true };
+}
 
-  return {
-    id: pos,
-    name: difficulty + ' ' + (pos - 49),
-    size: n,
-    difficulty: difficulty,
-    timeLimit: timeLimit,
-    clues: clues,
-    _generated: true
-  };
+function generateLevel(pos) {
+  for (var attempt = 0; attempt < 20; attempt++) {
+    var level = buildLevelAttempt(pos, attempt);
+    if (countSolutions(level, 2) === 1) return level;
+  }
+  // Fallback: return attempt 0 (has correct hints, just might have multiple solutions)
+  return buildLevelAttempt(pos, 0);
 }
 
 function getLevel(pos) {
