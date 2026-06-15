@@ -443,21 +443,27 @@ html, body {
 
 /* ── Level Progress Grid ── */
 .level-nav {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
   width: 100%;
   max-width: 320px;
 }
 .level-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
   background: none; border: none;
-  font-size: 1.1rem; cursor: pointer;
+  font-size: 1.2rem; cursor: pointer;
   color: var(--primary-500);
-  padding: 4px 8px;
+  padding: 4px 6px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
 }
+.level-nav-btn:first-child { left: -22px; }
+.level-nav-btn:last-child  { right: -22px; }
 .level-nav-btn.visible { opacity: 1; pointer-events: auto; }
 .level-grid-wrap {
   display: flex;
@@ -465,7 +471,6 @@ html, body {
   align-items: center;
   gap: 6px;
   width: 100%;
-  max-width: 320px;
 }
 .level-grid {
   display: grid;
@@ -511,44 +516,6 @@ html, body {
 .lvl-dot.lvl-s3 { background: #f59e0b; }
 .lvl-dot.lvl-cur { background: var(--primary-100); border-color: var(--primary-500); }
 .lvl-dot.lvl-locked { background: var(--neutral-100); border-color: transparent; opacity: 0.4; }
-
-.level-grid-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  max-width: 320px;
-}
-.level-page-indicator {
-  display: flex;
-  gap: 5px;
-  justify-content: center;
-}
-.page-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--neutral-300);
-  transition: background 0.2s;
-}
-.page-dot.active { background: var(--primary-500); }
-.level-nav {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  max-width: 320px;
-}
-.level-nav-btn {
-  background: none; border: none;
-  font-size: 1.1rem; cursor: pointer;
-  color: var(--primary-500);
-  padding: 4px 8px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-.level-nav-btn.visible { opacity: 1; pointer-events: auto; }
 
 /* ── Placement Flash (placed rectangle only) ── */
 .rect-flash {
