@@ -2,7 +2,7 @@
 
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260615-1';
+const GAME_VERSION = '20260615-2';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -3228,6 +3228,110 @@ function onTimeout() {
   timeoutBanner.classList.add('visible');
 }
 
+// ── Procedural Level Generation ──────────────────────────────────────────
+
+function seededRand(seed) {
+  return function() {
+    seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function generateLevel(pos) {
+  var seed = (pos * 2654435761) | 0;
+  var rand = seededRand(seed);
+  var sizeOptions = [4,5,5,6,6,6,7,7,8,8];
+  var n = sizeOptions[Math.floor(rand() * sizeOptions.length)];
+
+  // Partition grid top-left to bottom-right
+  var grid = [];
+  for (var i = 0; i < n; i++) { grid.push(new Array(n).fill(-1)); }
+  var rects = [];
+
+  for (var r = 0; r < n; r++) {
+    for (var c = 0; c < n; c++) {
+      if (grid[r][c] !== -1) continue;
+      // maxW: cells free to the right
+      var maxW = 0;
+      while (c + maxW < n && grid[r][c + maxW] === -1) maxW++;
+      var w = 1 + Math.floor(rand() * Math.min(maxW, 4));
+      // maxH: rows where entire width w is free
+      var maxH = 0;
+      while (r + maxH < n) {
+        var ok = true;
+        for (var cc = c; cc < c + w; cc++) {
+          if (grid[r + maxH][cc] !== -1) { ok = false; break; }
+        }
+        if (!ok) break;
+        maxH++;
+      }
+      var h = 1 + Math.floor(rand() * Math.min(maxH, 4));
+      var rectId = rects.length;
+      for (var rr = r; rr < r + h; rr++) {
+        for (var cc2 = c; cc2 < c + w; cc2++) {
+          grid[rr][cc2] = rectId;
+        }
+      }
+      rects.push({ r: r, c: c, w: w, h: h });
+    }
+  }
+
+  // Build clues
+  var hintOptions = ['h', 'v', 's', null];
+  var clues = rects.map(function(rect) {
+    var area = rect.w * rect.h;
+    var cr = rect.r + Math.floor(rand() * rect.h);
+    var cc3 = rect.c + Math.floor(rand() * rect.w);
+    var hint = area === 1 ? 's' : hintOptions[Math.floor(rand() * hintOptions.length)];
+    return { r: cr, c: cc3, v: area, hint: hint };
+  });
+
+  var difficulty = n <= 5 ? 'Leicht' : n === 6 ? 'Mittel' : n === 7 ? 'Schwer' : 'Experte';
+  var timeLimit = Math.max(15, Math.round(n * n * 0.7 + rects.length * 1.2));
+
+  return {
+    id: pos,
+    name: difficulty + ' ' + (pos - 49),
+    size: n,
+    difficulty: difficulty,
+    timeLimit: timeLimit,
+    clues: clues,
+    _generated: true
+  };
+}
+
+function getLevel(pos) {
+  if (pos < 50) return LEVELS[pos];
+  return generateLevel(pos);
+}
+
+function isPageComplete(pageIdx) {
+  var start = pageIdx * 50;
+  var end = start + 50;
+  for (var i = start; i < end; i++) {
+    var id = i; // for generated pages and page 0, id === position
+    if (pageIdx === 0) {
+      id = LEVELS[i].id;
+    }
+    if (!solved.includes(id)) return false;
+  }
+  return true;
+}
+
+function getTotalUnlockedLevels() {
+  var total = 50;
+  for (var page = 0; page < 9; page++) {
+    if (isPageComplete(page)) {
+      total += 50;
+    } else {
+      break;
+    }
+  }
+  return total;
+}
+
 // ── Navigation ────────────────────────────────────────────────────────────
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -3248,39 +3352,144 @@ function findCurrentLevel() {
   for (const idx of shuffledOrder) {
     if (!solved.includes(LEVELS[idx].id)) return idx;
   }
+  // All handmade levels solved — check generated pages
+  var total = getTotalUnlockedLevels();
+  for (var pos = 50; pos < total; pos++) {
+    if (!solved.includes(pos)) return pos;
+  }
   return shuffledOrder[0]; // all solved → restart from beginning
 }
 
 function findNextLevel() {
-  const pos = shuffledOrder.indexOf(currentLevelIndex);
-  for (let i = pos + 1; i < shuffledOrder.length; i++) {
-    if (!solved.includes(LEVELS[shuffledOrder[i]].id)) return shuffledOrder[i];
+  // If current is a handmade level (idx in shuffledOrder)
+  if (currentLevelIndex < 50) {
+    const pos = shuffledOrder.indexOf(currentLevelIndex);
+    for (let i = pos + 1; i < shuffledOrder.length; i++) {
+      if (!solved.includes(LEVELS[shuffledOrder[i]].id)) return shuffledOrder[i];
+    }
+    // All handmade after current solved — find first unsolved generated
+    var total = getTotalUnlockedLevels();
+    for (var genPos = 50; genPos < total; genPos++) {
+      if (!solved.includes(genPos)) return genPos;
+    }
+    return -1;
+  } else {
+    // Current is a generated level
+    var total2 = getTotalUnlockedLevels();
+    for (var nextPos = currentLevelIndex + 1; nextPos < total2; nextPos++) {
+      if (!solved.includes(nextPos)) return nextPos;
+    }
+    return -1;
   }
-  return -1;
 }
+
+let gridPage = 0;
+let gridSwipeAttached = false;
 
 function updateLevelGrid() {
   const grid = document.getElementById('level-grid');
   if (!grid) return;
   grid.innerHTML = '';
+  const totalUnlocked = getTotalUnlockedLevels();
+  const totalPages = Math.ceil(totalUnlocked / 50);
+  if (gridPage >= totalPages) gridPage = totalPages - 1;
+  if (gridPage < 0) gridPage = 0;
+
   const currentIdx = findCurrentLevel();
-  shuffledOrder.forEach(function(idx) {
-    const dot = document.createElement('div');
-    const levelId = LEVELS[idx].id;
-    const isSolved = solved.includes(levelId);
-    const starCount = stars[levelId] || 0;
-    const isCurrent = !isSolved && idx === currentIdx;
-    dot.className = 'lvl-dot' + (isSolved ? ' lvl-s' + starCount : '') + (isCurrent ? ' lvl-cur' : '');
-    if (isSolved && starCount > 0) dot.textContent = String(starCount);
-    if (isSolved) {
-      dot.addEventListener('click', function() { showReplayDialog(idx); });
+
+  if (gridPage === 0) {
+    // Show handmade levels in shuffled order
+    shuffledOrder.forEach(function(idx) {
+      const dot = document.createElement('div');
+      const levelId = getLevel(idx).id;
+      const isSolved = solved.includes(levelId);
+      const starCount = stars[levelId] || 0;
+      const isCurrent = !isSolved && idx === currentIdx;
+      dot.className = 'lvl-dot' + (isSolved ? ' lvl-s' + starCount : '') + (isCurrent ? ' lvl-cur' : '');
+      if (isSolved && starCount > 0) dot.textContent = String(starCount);
+      if (isSolved) {
+        dot.addEventListener('click', function() { showReplayDialog(idx); });
+      }
+      grid.appendChild(dot);
+    });
+  } else {
+    // Show generated levels for this page
+    const startPos = gridPage * 50;
+    const endPos = Math.min(startPos + 50, totalUnlocked);
+    for (var pos = startPos; pos < startPos + 50; pos++) {
+      const dot = document.createElement('div');
+      if (pos < endPos) {
+        const isSolved = solved.includes(pos);
+        const starCount = stars[pos] || 0;
+        const isCurrent = !isSolved && pos === currentIdx;
+        dot.className = 'lvl-dot' + (isSolved ? ' lvl-s' + starCount : '') + (isCurrent ? ' lvl-cur' : '');
+        if (isSolved && starCount > 0) dot.textContent = String(starCount);
+        if (isSolved) {
+          (function(p) {
+            dot.addEventListener('click', function() { showReplayDialog(p); });
+          })(pos);
+        }
+      } else {
+        dot.className = 'lvl-dot lvl-locked';
+      }
+      grid.appendChild(dot);
     }
-    grid.appendChild(dot);
-  });
+  }
+
+  // Update page indicator
+  const indicator = document.getElementById('level-page-indicator');
+  if (indicator) {
+    indicator.innerHTML = '';
+    for (var p = 0; p < totalPages; p++) {
+      const dot2 = document.createElement('div');
+      dot2.className = 'page-dot' + (p === gridPage ? ' active' : '');
+      indicator.appendChild(dot2);
+    }
+  }
+
+  // Update nav buttons
+  const prevBtn = document.getElementById('btn-grid-prev');
+  const nextBtn = document.getElementById('btn-grid-next');
+  if (prevBtn) prevBtn.classList.toggle('visible', gridPage > 0);
+  if (nextBtn) nextBtn.classList.toggle('visible', gridPage < totalPages - 1);
+
+  // Attach swipe detection (once)
+  if (!gridSwipeAttached) {
+    gridSwipeAttached = true;
+    const wrap = grid.parentElement; // level-grid-wrap
+    if (wrap) {
+      let touchStartX = 0, touchStartY = 0;
+      wrap.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+      }, { passive: true });
+      wrap.addEventListener('touchend', function(e) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 40 && Math.abs(dy) < 40) {
+          const totalPgs = Math.ceil(getTotalUnlockedLevels() / 50);
+          if (dx < 0 && gridPage < totalPgs - 1) { gridPage++; updateLevelGrid(); }
+          else if (dx > 0 && gridPage > 0) { gridPage--; updateLevelGrid(); }
+        }
+      }, { passive: true });
+    }
+
+    // Nav button listeners
+    const prevBtnEl = document.getElementById('btn-grid-prev');
+    const nextBtnEl = document.getElementById('btn-grid-next');
+    if (prevBtnEl) prevBtnEl.addEventListener('click', function() {
+      if (gridPage > 0) { gridPage--; updateLevelGrid(); }
+    });
+    if (nextBtnEl) nextBtnEl.addEventListener('click', function() {
+      const totalPgs2 = Math.ceil(getTotalUnlockedLevels() / 50);
+      if (gridPage < totalPgs2 - 1) { gridPage++; updateLevelGrid(); }
+    });
+  }
 }
 
 function showReplayDialog(idx) {
-  const levelId = LEVELS[idx].id;
+  const lv = getLevel(idx);
+  const levelId = lv.id;
   const starCount = stars[levelId] || 0;
   const bestTime = bestTimes[levelId];
   const pos = shuffledOrder.indexOf(idx) + 1;
@@ -3316,22 +3525,23 @@ function showMenu() {
   currentLevelIndex = -1;
   const btn  = document.getElementById('btn-continue');
   const hint = document.getElementById('menu-level-hint');
+  const totalUnlocked = getTotalUnlockedLevels();
   if (solved.length === 0) {
     btn.textContent = 'Spiel starten';
-  } else if (solved.length >= LEVELS.length) {
+  } else if (solved.length >= totalUnlocked) {
     btn.textContent = 'Nochmal spielen';
   } else {
     btn.textContent = 'Spiel fortsetzen';
   }
   if (hint) {
-    hint.textContent = solved.length >= LEVELS.length
+    hint.textContent = solved.length >= totalUnlocked
       ? 'Alle Level abgeschlossen! 🎉'
       : 'Du bist in Level ' + (solved.length + 1);
   }
   const starsEl = document.getElementById('menu-stars');
   if (starsEl) {
     const total = Object.values(stars).reduce((s, v) => s + v, 0);
-    starsEl.textContent = total > 0 ? '⭐ ' + total + ' / ' + (LEVELS.length * 3) + ' Sterne' : '';
+    starsEl.textContent = total > 0 ? '⭐ ' + total + ' / ' + (totalUnlocked * 3) + ' Sterne' : '';
   }
   updateDailyCard();
   updateLevelGrid();
@@ -3353,8 +3563,10 @@ function showGame(idx) {
     timeRemaining = 0;
   } else {
     timerEl.style.display = '';
-    titleEl.textContent = 'Level ' + (shuffledOrder.indexOf(idx) + 1);
-    timeRemaining = LEVELS[idx].timeLimit;
+    titleEl.textContent = idx < 50
+      ? 'Level ' + (shuffledOrder.indexOf(idx) + 1)
+      : 'Level ' + (idx + 1);
+    timeRemaining = getLevel(idx).timeLimit;
   }
   updateTimerDisplay();
   menuScreen.classList.remove('active');
@@ -3484,7 +3696,7 @@ function haptic(style) {
 function resize() {
   if (currentLevelIndex < 0) return;
   const wrap = document.getElementById('board-wrap');
-  const n    = LEVELS[currentLevelIndex].size;
+  const n    = getLevel(currentLevelIndex).size;
   const wrapRect = wrap.getBoundingClientRect();
   const BORDER = 4; // 2px border each side, border-box
   const availW = Math.floor(wrapRect.width  - 32) - BORDER;
@@ -3510,7 +3722,7 @@ function resize() {
 // ── Drawing ───────────────────────────────────────────────────────────────
 function draw() {
   if (!ctx || BOARD_PX === 0) return;
-  const level = LEVELS[currentLevelIndex];
+  const level = getLevel(currentLevelIndex);
   const n = level.size;
 
   ctx.clearRect(0, 0, BOARD_PX, BOARD_PX);
@@ -3662,7 +3874,7 @@ function cellFromPoint(clientX, clientY) {
   const rect = canvas.getBoundingClientRect();
   const x = clientX - rect.left;
   const y = clientY - rect.top;
-  const n = LEVELS[currentLevelIndex].size;
+  const n = getLevel(currentLevelIndex).size;
   const cellPx = rect.width / n;
   return {
     r: Math.max(0, Math.min(n - 1, Math.floor(y / cellPx))),
@@ -3731,7 +3943,7 @@ canvas.addEventListener('mouseup', e => {
 // Returns 'valid' if the rectangle has exactly one clue, correct area,
 // and matching orientation hint. Returns 'invalid' otherwise.
 function rectStatus(r0, c0, r1, c1) {
-  const level = LEVELS[currentLevelIndex];
+  const level = getLevel(currentLevelIndex);
   const rows = r1 - r0 + 1;
   const cols = c1 - c0 + 1;
   const area = rows * cols;
@@ -3788,7 +4000,7 @@ function isAdjacent(rect, r0, c0, r1, c1) {
 }
 
 function checkWin() {
-  const level = LEVELS[currentLevelIndex];
+  const level = getLevel(currentLevelIndex);
   const n = level.size;
 
   const grid = Array.from({ length: n }, () => new Uint8Array(n));
@@ -3822,8 +4034,8 @@ function checkWin() {
     winMsg.textContent = 'Heute geschafft!';
     btnNext.textContent = 'Zurück zum Menü';
   } else {
-    const elapsed = LEVELS[currentLevelIndex].timeLimit - timeRemaining;
-    const ratio   = elapsed / LEVELS[currentLevelIndex].timeLimit;
+    const elapsed = level.timeLimit - timeRemaining;
+    const ratio   = elapsed / level.timeLimit;
     const earned  = timeExtended ? 1 : ratio <= 0.5 ? 3 : ratio <= 0.9 ? 2 : 1;
     stars[level.id] = earned;
     if (!solved.includes(level.id)) {
@@ -3869,7 +4081,7 @@ document.getElementById('btn-reset').addEventListener('click', () => {
   winBanner.classList.remove('visible');
   timeoutBanner.classList.remove('visible');
   timerEl.classList.remove('stopped');
-  timeRemaining = LEVELS[currentLevelIndex].timeLimit;
+  timeRemaining = getLevel(currentLevelIndex).timeLimit;
   startTimer();
   draw();
 });
@@ -3896,7 +4108,7 @@ document.getElementById('btn-retry').addEventListener('click', () => {
   const extendBtn = document.getElementById('btn-extend-time');
   if (extendBtn) extendBtn.style.display = '';
   timeoutBanner.classList.remove('visible');
-  timeRemaining = LEVELS[currentLevelIndex].timeLimit;
+  timeRemaining = getLevel(currentLevelIndex).timeLimit;
   showStartOverlay(timeRemaining, startTimer);
   draw();
 });
