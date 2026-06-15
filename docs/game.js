@@ -3350,7 +3350,7 @@ function initShuffledOrder() {
 
 function findCurrentLevel() {
   for (const idx of shuffledOrder) {
-    if (!solved.includes(LEVELS[idx].id)) return idx;
+    if (!solved.includes(idx)) return idx;
   }
   // All handmade levels solved — check generated pages
   var total = getTotalUnlockedLevels();
