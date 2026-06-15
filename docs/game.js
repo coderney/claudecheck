@@ -3823,10 +3823,10 @@ function checkWin() {
     btnNext.textContent = 'Zurück zum Menü';
   } else {
     const elapsed = LEVELS[currentLevelIndex].timeLimit - timeRemaining;
+    const ratio   = elapsed / LEVELS[currentLevelIndex].timeLimit;
+    const earned  = timeExtended ? 1 : ratio <= 0.5 ? 3 : ratio <= 0.9 ? 2 : 1;
+    stars[level.id] = earned;
     if (!solved.includes(level.id)) {
-      const ratio  = elapsed / LEVELS[currentLevelIndex].timeLimit;
-      const earned = timeExtended ? 1 : ratio <= 0.5 ? 3 : ratio <= 0.9 ? 2 : 1;
-      stars[level.id] = earned;
       solved.push(level.id);
     }
     if (!timeExtended && (bestTimes[level.id] == null || elapsed < bestTimes[level.id])) {
