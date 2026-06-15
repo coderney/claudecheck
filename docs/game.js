@@ -2,7 +2,7 @@
 
 
 // Bump this string on every deployment — drives the update indicator on the menu.
-const GAME_VERSION = '20260615-3';
+const GAME_VERSION = '20260615-4';
 
 // ── Levels ────────────────────────────────────────────────────────────────
 // hint: 'h'=horizontal, 'v'=vertical, 's'=square, null=no hint (cross shown)
@@ -3840,68 +3840,74 @@ function draw() {
 }
 
 // Orientation indicator behind a clue number.
-// Size is derived from the actual font size + inner padding, so the rectangle
-// always wraps the number with comfortable breathing room.
-// hint null → "+" cross (no directional info)
-// hint 'h'/'v'/'s' → teal rectangle with matching aspect ratio
+// hint null  → dashed grey square  (no directional constraint)
+// hint 'h'   → solid teal horizontal pill (clearly wider than tall)
+// hint 'v'   → solid teal vertical   pill (clearly taller than wide)
+// hint 's'   → solid teal circle         (perfectly symmetric)
 function drawClueIndicator(clue) {
   const cx = clue.c * CELL + CELL / 2;
   const cy = clue.r * CELL + CELL / 2;
+  const pad = Math.max(2, Math.round(CELL * 0.05));
 
-  // Clip to the same inner area as a selection rect so the indicator
-  // never extends beyond the selection rectangle's padding
-  const selPad = Math.max(2, Math.round(CELL * 0.05));
   ctx.save();
   ctx.beginPath();
-  ctx.rect(clue.c * CELL + selPad, clue.r * CELL + selPad, CELL - selPad * 2, CELL - selPad * 2);
+  ctx.rect(clue.c * CELL + pad, clue.r * CELL + pad, CELL - pad * 2, CELL - pad * 2);
   ctx.clip();
 
-  const fontSize  = Math.max(11, Math.round(CELL * 0.40));
-  const innerPad  = Math.max(5, Math.round(CELL * 0.15)); // padding around text
-  const snug      = fontSize + innerPad * 2;              // rect snug around number
-  const maxDim    = CELL - 4;
-  const elongated = Math.min(maxDim, snug * 2.4);
+  const maxDim = CELL - pad * 2;
+  const lw = Math.max(1.5, Math.round(CELL * 0.07));
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // Base unit: ~18% of cell, minimum 5px
+  const u = Math.max(5, CELL * 0.18);
 
   if (!clue.hint) {
-    // "+" cross: two bars, each snug-height thick and elongated-length long
-    const thick = Math.min(maxDim, snug);
-    const arm   = Math.min(maxDim, elongated);
-    const r     = Math.min(4, thick * 0.25);
-
-    ctx.fillStyle   = 'rgba(96,111,133,0.12)';
-    ctx.strokeStyle = 'rgba(96,111,133,0.42)';
-    ctx.lineWidth   = 1.5;
-
+    // Dashed rounded square — neutral, "any shape accepted"
+    const half = Math.min(maxDim * 0.38, u * 2.1);
+    ctx.fillStyle   = 'rgba(96,111,133,0.09)';
+    ctx.strokeStyle = 'rgba(96,111,133,0.40)';
+    ctx.setLineDash([Math.max(2, lw * 1.4), Math.max(2, lw * 1.4)]);
     ctx.beginPath();
-    ctx.roundRect(cx - arm / 2, cy - thick / 2, arm, thick, r);
-    ctx.fill(); ctx.stroke();
+    ctx.roundRect(cx - half, cy - half, half * 2, half * 2, Math.max(3, half * 0.28));
+    ctx.fill();
+    ctx.stroke();
+    ctx.setLineDash([]);
 
+  } else if (clue.hint === 'h') {
+    // Horizontal pill — ratio ≥ 3:1 so it reads as "wide" at any cell size
+    const ph = Math.min(maxDim * 0.46, u * 1.4);
+    const pw = Math.min(maxDim, ph * 3.2);
+    ctx.fillStyle   = 'rgba(9,146,169,0.14)';
+    ctx.strokeStyle = 'rgba(9,146,169,0.54)';
     ctx.beginPath();
-    ctx.roundRect(cx - thick / 2, cy - arm / 2, thick, arm, r);
-    ctx.fill(); ctx.stroke();
-    ctx.restore();
-    return;
-  }
+    ctx.roundRect(cx - pw / 2, cy - ph / 2, pw, ph, ph / 2);
+    ctx.fill();
+    ctx.stroke();
 
-  let iw, ih;
-  if (clue.hint === 'h') {
-    ih = Math.min(maxDim, snug);
-    iw = Math.min(maxDim, elongated);
   } else if (clue.hint === 'v') {
-    iw = Math.min(maxDim, snug);
-    ih = Math.min(maxDim, elongated);
+    // Vertical pill — ratio ≥ 1:3 so it reads as "tall" at any cell size
+    const pw = Math.min(maxDim * 0.46, u * 1.4);
+    const ph = Math.min(maxDim, pw * 3.2);
+    ctx.fillStyle   = 'rgba(9,146,169,0.14)';
+    ctx.strokeStyle = 'rgba(9,146,169,0.54)';
+    ctx.beginPath();
+    ctx.roundRect(cx - pw / 2, cy - ph / 2, pw, ph, pw / 2);
+    ctx.fill();
+    ctx.stroke();
+
   } else {
-    iw = ih = Math.min(maxDim, Math.round(snug * 1.15));
+    // Circle — unmistakably symmetric; cannot be confused with a pill
+    const r = Math.min(maxDim * 0.40, u * 2.1);
+    ctx.fillStyle   = 'rgba(9,146,169,0.14)';
+    ctx.strokeStyle = 'rgba(9,146,169,0.54)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
   }
 
-  const rr = Math.min(5, iw * 0.2, ih * 0.2);
-  ctx.beginPath();
-  ctx.roundRect(cx - iw / 2, cy - ih / 2, iw, ih, rr);
-  ctx.fillStyle   = 'rgba(9,146,169,0.13)';
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(9,146,169,0.55)';
-  ctx.lineWidth   = 1.5;
-  ctx.stroke();
   ctx.restore();
 }
 
